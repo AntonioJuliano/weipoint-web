@@ -1,6 +1,7 @@
 import React from "react";
 import AceEditor from 'react-ace';
 import Measure from 'react-measure';
+import 'brace';
 
 require('../lib/mode-solidity.js');
 
