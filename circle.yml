@@ -1,9 +1,21 @@
+dependencies:
+  override:
+    - echo "Skipping dependencies phase"
+database:
+  override:
+    - echo "Skipping test phase"
+compile:
+  override:
+    - npm run build
+test:
+  override:
+    - echo "Skipping test phase"
 deployment:
   production:
     branch: master
     commands:
-      - npm run build && aws s3 sync build s3://weipoint/
+      - npm run build && aws s3 sync build s3://weipoint/ --delete
   staging:
     branch: staging
     commands:
-      - npm run build && aws s3 sync build s3://weipointstaging/
+      - npm run build && aws s3 sync build s3://weipointstaging/ --delete
