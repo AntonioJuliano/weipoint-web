@@ -1,9 +1,9 @@
 dependencies:
   override:
-    - echo "Skipping dependencies phase"
+    - npm install
 database:
   override:
-    - npm install --production
+    - echo "Skipping database phase"
 compile:
   override:
     - npm run build
