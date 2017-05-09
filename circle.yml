@@ -3,7 +3,7 @@ dependencies:
     - echo "Skipping dependencies phase"
 database:
   override:
-    - echo "Skipping test phase"
+    - npm install --production
 compile:
   override:
     - npm run build
