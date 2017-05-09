@@ -14,8 +14,8 @@ deployment:
   production:
     branch: master
     commands:
-      - npm run build && aws s3 sync build s3://weipoint/ --delete
+      - aws s3 sync build s3://weipoint/ --delete
   staging:
     branch: staging
     commands:
-      - npm run build && aws s3 sync build s3://weipointstaging/ --delete
+      - aws s3 sync build s3://weipointstaging/ --delete
