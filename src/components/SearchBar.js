@@ -120,7 +120,7 @@ class SearchBar extends React.Component {
               fontFamily: "Raleway, sans-serif",
               marginBottom: 22
             }}>
-              {'Search the decentralized web - test'}
+              {'Search the decentralized web'}
             </div>
           </div>
         }

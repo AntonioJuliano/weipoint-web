@@ -2,7 +2,13 @@ general:
   branches:
     only:
      - master
+machine:
+  timezone: America/Los_Angeles
 dependencies:
+  pre:
+    - aws configure set region us-east-1
+    - aws configure set preview.cloudfront true
+    - aws configure set preview.create-invalidation true
   override:
     - npm install -g npm && npm install
 database:
@@ -23,3 +29,4 @@ deployment:
     branch: staging
     commands:
       - aws s3 sync build s3://weipointstaging/ --delete
+      - aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"$CLOUDFRONT_DISTRIBUTION_ID\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":1,\"Items\":[\"/*\"]},\"CallerReference\":\"$(date +%s)\"}}"
