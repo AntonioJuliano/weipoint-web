@@ -25,6 +25,7 @@ deployment:
     branch: master
     commands:
       - aws s3 sync build s3://weipoint/ --delete
+      - aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"E1ZGPH5JTBLRVW\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":1,\"Items\":[\"/*\"]},\"CallerReference\":\"$(date +%s)\"}}"
   staging:
     branch: staging
     commands:
