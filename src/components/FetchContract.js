@@ -6,6 +6,7 @@ import SearchError from './SearchError';
 import Contract from './Contract';
 import { withRouter } from 'react-router-dom';
 import mixpanel from '../lib/Mixpanel';
+import paths from '../lib/ApiPaths';
 
 const SEARCH_STATES = {
   SEARCHING: 1,
@@ -62,7 +63,7 @@ class FetchContract extends React.Component {
 
   async search(props) {
     const address = props.match.params.address.toLowerCase();
-    const requestPath = `/api/v1/contract?address=${address}`;
+    const requestPath = paths.contract.get + `?address=${address}`;
 
     try {
       const response = await fetch(requestPath, { method: 'get' });

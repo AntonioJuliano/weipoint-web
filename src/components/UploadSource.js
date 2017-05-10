@@ -15,6 +15,7 @@ import Toggle from 'material-ui/Toggle';
 import Editor from './Editor';
 import CheckCircleIcon from 'react-material-icons/icons/action/check-circle';
 import { green500 } from 'material-ui/styles/colors';
+import paths from '../lib/ApiPaths';
 
 class UploadSource extends React.Component {
     constructor(props) {
@@ -45,7 +46,7 @@ class UploadSource extends React.Component {
     }
 
     async loadCompilerVersions() {
-      const requestPath = '/api/v1/contract/compilerVersions';
+      const requestPath = paths.contract.compilerVersions;
       const thisRef = this;
       const response = await fetch(requestPath, { method: 'get'});
       const json = await response.json();

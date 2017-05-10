@@ -6,6 +6,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import { Row, Col } from 'react-flexbox-grid';
 import Autosuggest from 'react-autosuggest';
 import { withRouter } from 'react-router-dom';
+import paths from '../lib/ApiPaths';
 
 const SMALL_SCREEN_WIDTH = 500;
 
@@ -66,7 +67,7 @@ class SearchBar extends React.Component {
       return;
     }
 
-    const requestPath = `/api/v1/search/autocomplete?query=${value}`;
+    const requestPath = paths.search.autocomplete + `?query=${value}`;
 
     try {
       const response = await fetch(requestPath);
