@@ -182,7 +182,7 @@ class SearchBar extends React.Component {
               <div style={{ marginTop: 4, marginBottom: 4, marginLeft: 8 }}>
                 <FloatingActionButton
                   mini={true}
-                  onClick={this.search}
+                  onClick={() => this.search()}
                   >
                   <SearchIcon />
                 </FloatingActionButton>
@@ -195,7 +195,7 @@ class SearchBar extends React.Component {
           <div style={{ display: 'flex', marginLeft: 'auto', marginRight: 'auto' }} className='button_container_2'>
             <div  style={{ marginLeft: 'auto', marginRight: 15 }}>
               <FloatingActionButton
-                onClick={this.search}
+                onClick={() => this.search()}
               >
                 <SearchIcon />
               </FloatingActionButton>
