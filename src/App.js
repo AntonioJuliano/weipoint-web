@@ -1,5 +1,12 @@
 /*global web3:true*/
 require('./lib/Bugsnag');
+
+Number.isInteger = Number.isInteger || function(value) {
+    return typeof value === "number" &&
+           isFinite(value) &&
+           Math.floor(value) === value;
+};
+
 import React, { Component } from 'react';
 import Search from './components/Search';
 import Web3 from 'web3';
