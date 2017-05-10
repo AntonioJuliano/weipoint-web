@@ -8,6 +8,7 @@ import { red500 } from 'material-ui/styles/colors';
 import { Promise as bluebirdPromise } from 'bluebird';
 import isEqual from 'lodash.isequal';
 import mixpanel from '../lib/Mixpanel';
+import paths from '../lib/ApiPaths';
 
 class ContractFunction extends React.Component {
   constructor(props) {
@@ -115,7 +116,7 @@ class ContractFunction extends React.Component {
       functionName: this.props.abi.name,
       arguments: this.getArgValues()
     };
-    const requestPath = '/api/v1/contract/constantFunction';
+    const requestPath = paths.contract.constantFunction;
     const response = await fetch(requestPath, {
       method: 'POST',
       headers: {

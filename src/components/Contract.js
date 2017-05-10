@@ -15,6 +15,7 @@ import update from 'immutability-helper';
 import clone from 'lodash.clone';
 import FlatButton from 'material-ui/FlatButton';
 import { withRouter } from 'react-router-dom';
+import paths from '../lib/ApiPaths';
 
 const OVERVIEW = 'OVERVIEW';
 const VIEW_SOURCE = 'VIEW_SOURCE';
@@ -95,7 +96,7 @@ class Contract extends React.Component {
     }
     this.updateContract(contractClone);
 
-    const requestPath = `/api/v1/contract/metadata`;
+    const requestPath = paths.contract.metadata;
 
     try {
       await fetch(requestPath, {
@@ -112,7 +113,7 @@ class Contract extends React.Component {
   }
 
   async getPrice() {
-    const requestPath = `/api/v1/data/price`;
+    const requestPath = paths.data.price;
     const response = await fetch(requestPath);
     if (response.status === 200) {
       const json = await response.json();
@@ -132,7 +133,7 @@ class Contract extends React.Component {
         optimized: optimized
       };
 
-      const requestPath = `/api/v1/contract/source`;
+      const requestPath = paths.contract.source;
       const response = await fetch(requestPath, {
         method: 'POST',
         headers: {
