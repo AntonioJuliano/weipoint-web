@@ -38,11 +38,10 @@ class FetchAddress extends React.Component {
     if (props.contractStore[props.match.params.address]) {
       this.state = {
         contract: props.contractStore[props.match.params.address],
-        searchState: SEARCH_STATES.COMPLETED
+        searchState: SEARCH_STATES.CONTRACT
       };
     } else {
       if (!props.web3.isAddress(props.match.params.address)) {
-        console.log('na')
         this.state = {
           searchState: SEARCH_STATES.INVALID,
           contract: null
