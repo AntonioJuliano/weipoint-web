@@ -5,7 +5,7 @@ import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import { Row, Col } from 'react-flexbox-grid';
 import Autosuggest from 'react-autosuggest';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import paths from '../lib/ApiPaths';
 
 const SMALL_SCREEN_WIDTH = 500;
@@ -127,19 +127,28 @@ class SearchBar extends React.Component {
         {
           this.props.reduced &&
           this.state.smallScreen &&
-          <div
+          <Link
+            to='/'
             style={{
-              fontSize: 22,
-              fontFamily: "Raleway, sans-serif",
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              cursor: 'pointer',
-              marginBottom: 10
+              textDecoration: 'none',
+              marginTop: 'auto',
+              marginBottom: 'auto',
+              color: 'inherit'
             }}
-            onClick={ () => this.props.history.push('/') }
           >
-            {'Weipoint'}
-          </div>
+            <div
+              style={{
+                fontSize: 22,
+                fontFamily: "Raleway, sans-serif",
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                cursor: 'pointer',
+                marginBottom: 10
+              }}
+            >
+              {'Weipoint'}
+            </div>
+          </Link>
         }
         <div className="SearchTextField" style={{ marginBottom: 20 }}>
           <Row
@@ -149,20 +158,27 @@ class SearchBar extends React.Component {
             {
               this.props.reduced &&
               !this.state.smallScreen &&
-              <Col
-                smOffset={1}
+              <Link
+                to='/'
                 style={{
-                  fontSize: 22,
-                  fontFamily: "Raleway, sans-serif",
+                  textDecoration: 'none',
                   marginTop: 'auto',
                   marginBottom: 'auto',
-                  marginRight: 12,
-                  cursor: 'pointer'
+                  color: 'inherit'
                 }}
-                onClick={ () => this.props.history.push('/') }
               >
-                {'Weipoint'}
-              </Col>
+                <Col
+                  smOffset={1}
+                  style={{
+                    fontSize: 22,
+                    fontFamily: "Raleway, sans-serif",
+                    marginRight: 12,
+                    cursor: 'pointer'
+                  }}
+                >
+                  {'Weipoint'}
+                </Col>
+              </Link>
             }
             <Col
               xs={barSize}

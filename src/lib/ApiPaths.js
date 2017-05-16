@@ -14,6 +14,9 @@ const paths = {
   search: {
     get: origin + '/api/v1/search',
     autocomplete: origin + '/api/v1/search/autocomplete'
+  },
+  ens: {
+    get: origin + '/api/v1/ens'
   }
 }
 

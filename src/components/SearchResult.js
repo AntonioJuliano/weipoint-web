@@ -86,7 +86,7 @@ class SearchResult extends React.Component {
         style={{ marginTop: 10, textAlign: 'left', marginBottom: 10, cursor: 'pointer' }}
         onMouseEnter={ e => this.setState({ focused: true })}
         onMouseLeave={ e => this.setState({ focused: false })}
-        onClick={ e => this.props.history.push('/contract/' + this.props.address) }
+        onClick={ e => this.props.history.push('/address/' + this.props.address) }
       >
         <Card>
           <CardTitle

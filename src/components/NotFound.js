@@ -3,7 +3,7 @@ import ReportProblemIcon from 'react-material-icons/icons/action/report-problem'
 import { yellow700 } from 'material-ui/styles/colors';
 import SearchStatus from './SearchStatus';
 
-class SearchError extends React.Component {
+class NotFound extends React.Component {
   render() {
     return (
       <SearchStatus
@@ -19,8 +19,8 @@ class SearchError extends React.Component {
   }
 }
 
-SearchError.propTypes = {
+NotFound.propTypes = {
   query: React.PropTypes.string.isRequired
 }
 
-export default SearchError;
+export default NotFound;
