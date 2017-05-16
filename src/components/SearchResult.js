@@ -5,15 +5,11 @@ import VerifiedUserIcon from 'react-material-icons/icons/action/verified-user';
 import LanguageIcon from 'react-material-icons/icons/action/language';
 import Tags from './Tags';
 import { green600, blue700 } from 'material-ui/styles/colors';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 
 class SearchResult extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      focused: false
-    }
 
     this.getBadges = this.getBadges.bind(this);
   }
@@ -78,21 +74,21 @@ class SearchResult extends React.Component {
   }
 
   render() {
-    const titleStyle = this.state.focused ? { color: '#0060fc' } : {};
-    titleStyle.wordWrap = 'break-word';
+    const titleElement = (
+      <Link to={'/address/' + this.props.address} style={{ textDecoration: 'none' }}>
+        {this.props.name || 'Contract'}
+      </Link>
+    );
 
     return (
       <div
-        style={{ marginTop: 10, textAlign: 'left', marginBottom: 10, cursor: 'pointer' }}
-        onMouseEnter={ e => this.setState({ focused: true })}
-        onMouseLeave={ e => this.setState({ focused: false })}
-        onClick={ e => this.props.history.push('/address/' + this.props.address) }
+        style={{ marginTop: 10, textAlign: 'left', marginBottom: 10 }}
       >
         <Card>
           <CardTitle
-            title={this.props.name || 'Contract'}
+            title={titleElement}
             subtitle={this.props.address}
-            titleStyle={titleStyle}
+            titleStyle={{ wordWrap: 'break-word' }}
             subtitleStyle={{ wordWrap: 'break-word' }}
           />
           <CardText style={{paddingTop: 0}}>
