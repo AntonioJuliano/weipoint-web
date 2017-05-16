@@ -1,7 +1,8 @@
 import React from "react";
 import isEqual from 'lodash.isequal';
-import NotFound from './NotFound';
+import EOA from './EOA';
 import PendingSearch from './PendingSearch';
+import NotFound from './NotFound';
 import SearchError from './SearchError';
 import Contract from './Contract';
 import { withRouter } from 'react-router-dom';
@@ -10,9 +11,10 @@ import paths from '../lib/ApiPaths';
 
 const SEARCH_STATES = {
   SEARCHING: 1,
-  NOT_FOUND: 2,
-  COMPLETED: 3,
-  ERROR: 4
+  CONTRACT: 2,
+  EOA: 3, // Externally owned account, e.g. a non-contract account
+  ERROR: 4,
+  INVALID: 5
 }
 
 const initialState = {
@@ -20,7 +22,7 @@ const initialState = {
   contract: null
 };
 
-class FetchContract extends React.Component {
+class FetchAddress extends React.Component {
   constructor(props) {
     super(props);
 
@@ -30,16 +32,23 @@ class FetchContract extends React.Component {
     this.getBodyElement = this.getBodyElement.bind(this);
 
     mixpanel.track(
-      "Contract",
+      "Contract", // Contract for legacy reasons
       {"address": props.match.params.address.toLowerCase()}
     );
     if (props.contractStore[props.match.params.address]) {
       this.state = {
         contract: props.contractStore[props.match.params.address],
-        searchState: SEARCH_STATES.COMPLETED
+        searchState: SEARCH_STATES.CONTRACT
       };
     } else {
-      this.search(props);
+      if (!props.web3.isAddress(props.match.params.address)) {
+        this.state = {
+          searchState: SEARCH_STATES.INVALID,
+          contract: null
+        };
+      } else {
+        this.search(props);
+      }
     }
   }
 
@@ -47,16 +56,23 @@ class FetchContract extends React.Component {
     if (!isEqual(nextProps, this.props)) {
       mixpanel.track(
         "Contract",
-        {"address": this.props.match.params.address.toLowerCase()}
+        {"address": nextProps.match.params.address.toLowerCase()}
       );
       if (nextProps.contractStore[nextProps.match.params.address]) {
         this.setState({
           contract: nextProps.contractStore[nextProps.match.params.address],
-          searchState: SEARCH_STATES.COMPLETED
+          searchState: SEARCH_STATES.CONTRACT
         });
       } else {
-        this.setState(initialState);
-        this.search(nextProps);
+        if (!nextProps.web3.isAddress(nextProps.match.params.address)) {
+          this.setState({
+            searchState: SEARCH_STATES.INVALID,
+            contract: null
+          });
+        } else {
+          this.setState(initialState);
+          this.search(nextProps);
+        }
       }
     }
   }
@@ -68,7 +84,7 @@ class FetchContract extends React.Component {
     try {
       const response = await fetch(requestPath, { method: 'get' });
       if (response.status === 400) {
-        this.setState({ searchState: SEARCH_STATES.NOT_FOUND });
+        this.setState({ searchState: SEARCH_STATES.EOA });
         return;
       }
       if (response.status !== 200) {
@@ -79,7 +95,7 @@ class FetchContract extends React.Component {
       this.props.contractStore[address] = json.contract;
       this.setState({
         contract: json.contract,
-        searchState: SEARCH_STATES.COMPLETED
+        searchState: SEARCH_STATES.CONTRACT
       });
     } catch (e) {
       this.setState({ searchState: SEARCH_STATES.ERROR });
@@ -90,13 +106,15 @@ class FetchContract extends React.Component {
     switch(this.state.searchState) {
       case SEARCH_STATES.SEARCHING:
         return <PendingSearch />;
-      case SEARCH_STATES.NOT_FOUND:
-        return <NotFound
-            query={this.props.match.params.address}
+      case SEARCH_STATES.EOA:
+        return <EOA
+            address={this.props.match.params.address}
           />;
       case SEARCH_STATES.ERROR:
         return <SearchError />;
-      case SEARCH_STATES.COMPLETED:
+      case SEARCH_STATES.INVALID:
+        return <NotFound query={this.props.match.params.address} />;
+      case SEARCH_STATES.CONTRACT:
         return <Contract
             contract={this.state.contract}
             web3={this.props.web3}
@@ -113,9 +131,9 @@ class FetchContract extends React.Component {
   }
 }
 
-FetchContract.propTypes = {
+FetchAddress.propTypes = {
   web3: React.PropTypes.object.isRequired,
   contractStore: React.PropTypes.object.isRequired
 }
 
-export default withRouter(FetchContract);
+export default withRouter(FetchAddress);

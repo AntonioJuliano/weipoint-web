@@ -1,6 +1,7 @@
 import React from "react";
 import SearchBar from './SearchBar';
-import FetchContract from './FetchContract';
+import FetchAddress from './FetchAddress';
+import FetchDomain from './FetchDomain';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Route, withRouter, Switch } from 'react-router-dom';
 import TagSearch from './TagSearch';
@@ -28,10 +29,16 @@ class Search extends React.Component {
     }
 
     if (this.props.web3.isAddress(query)) {
-      this.props.history.push('/contract/' + query);
+      this.props.history.push('/address/' + query);
+    } else if (this.isEnsDomain(query)) {
+      this.props.history.push('/domain/' + query);
     } else {
       this.props.history.push('/search/' + query);
     }
+  }
+
+  isEnsDomain(query) {
+    return query.match(/^[a-zA-z0-9]+(\.?[a-zA-z0-9]+)+\.eth$/);
   }
 
   getBodyElement() {
@@ -54,11 +61,15 @@ class Search extends React.Component {
             />}
           />
           <Route
-            path="/contract/:address"
-            render={() => <FetchContract
+            path="/address/:address"
+            render={() => <FetchAddress
               web3={this.props.web3}
               contractStore={this.state.contractStore}
             />}
+          />
+          <Route
+            path="/domain/:domain"
+            render={() => <FetchDomain />}
           />
           <Route
             path="/terms"

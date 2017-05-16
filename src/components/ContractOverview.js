@@ -50,7 +50,7 @@ class ContractOverview extends React.Component {
               defaultValue={'No Description Added'}
               autoAcceptFirst={true}
               validate={this.validateDescription}
-              />
+            />
           </Col>
         </Row>
         <Divider style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%'}}/>
