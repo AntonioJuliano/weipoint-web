@@ -232,7 +232,7 @@ class SearchBar extends React.Component {
   }
 
   getInputElement() {
-    let hintText = this.props.reduced ? null : 'Search by address or term';
+    let hintText = this.props.reduced ? null : 'Search by address, ens domain, or term';
     if (!this.state.smallScreen && !this.props.reduced) {
       hintText += ', e.g. "token"';
     }
@@ -243,7 +243,8 @@ class SearchBar extends React.Component {
 
     const style = {
       container: {
-        position: 'relative'
+        position: 'relative',
+        minWidth: this.state.smallScreen ? 320 : 390
       },
       input: {
         height: 48,
