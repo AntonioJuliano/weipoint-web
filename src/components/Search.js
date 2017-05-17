@@ -17,10 +17,14 @@ class Search extends React.Component {
     this.state = {
       searchStore: {},
       contractStore: {},
-      autocompleteStore: {}
+      autocompleteStore: {},
+      userAccount: null
     };
     this.handleSearchBarClick = this.handleSearchBarClick.bind(this);
     this.getBodyElement = this.getBodyElement.bind(this);
+    this.getUserAccount = this.getUserAccount.bind(this);
+
+    this.getUserAccount();
   }
 
   handleSearchBarClick(query) {
@@ -65,6 +69,7 @@ class Search extends React.Component {
             render={() => <FetchAddress
               web3={this.props.web3}
               contractStore={this.state.contractStore}
+              userAddress={this.state.userAddress}
             />}
           />
           <Route
@@ -105,6 +110,17 @@ class Search extends React.Component {
     );
   }
 
+  async getUserAccount() {
+    if (!this.props.web3.isConnected()) {
+      return;
+    }
+    const userAccounts = await this.props.web3.eth.getAccountsAsync();
+
+    if (userAccounts) {
+      this.setState({ userAccount: userAccounts[0] });
+    }
+  }
+
   render() {
     return (
       <div className="search" style={{ minWidth: 320 }}>
@@ -116,6 +132,7 @@ class Search extends React.Component {
                 onBrowseClicked={ () => this.props.history.push('/all') }
                 reduced={this.props.location.pathname !== '/'}
                 autocompleteStore={this.state.autocompleteStore}
+                userAccount={this.state.userAccount}
               />
             </div>
           </Row>

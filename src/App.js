@@ -1,6 +1,6 @@
 /*global web3:true*/
-require('./lib/Bugsnag');
 
+// Polyfill needed for IE
 Number.isInteger = Number.isInteger || function(value) {
     return typeof value === "number" &&
            isFinite(value) &&
@@ -18,6 +18,7 @@ import {
   Route
 } from 'react-router-dom';
 import Footer from './components/Footer';
+import bluebird from 'bluebird';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -31,6 +32,8 @@ class App extends Component {
     } else {
       this.web3 = new Web3();
     }
+
+    bluebird.promisifyAll(this.web3.eth);
   }
 
   render() {
