@@ -3,8 +3,9 @@ import {Card, CardTitle, CardText} from 'material-ui/Card';
 import AssignmentIcon from 'react-material-icons/icons/action/assignment';
 import VerifiedUserIcon from 'react-material-icons/icons/action/verified-user';
 import LanguageIcon from 'react-material-icons/icons/action/language';
+import AttachMoneyIcon from 'react-material-icons/icons/editor/attach-money';
 import Tags from './Tags';
-import { green600, blue700 } from 'material-ui/styles/colors';
+import { green600, blue700, green900 } from 'material-ui/styles/colors';
 import { withRouter, Link } from 'react-router-dom';
 
 class SearchResult extends React.Component {
@@ -53,6 +54,19 @@ class SearchResult extends React.Component {
             <LanguageIcon color={blue700}/>
           </span>
         );
+      }
+
+      if (this.props.contract.isToken) {
+        badges.push(
+          <span
+            className="hint--bottom-right hint--rounded"
+            aria-label="Token"
+            style={{ width: 24, height: 24, marginLeft: 10}}
+            key='token'
+          >
+            <AttachMoneyIcon color={green900}/>
+          </span>
+        )
       }
     }
 
