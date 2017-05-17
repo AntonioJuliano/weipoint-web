@@ -53,7 +53,7 @@ class FetchAddress extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(nextProps, this.props)) {
+    if (!isEqual(nextProps.match.params.address, this.props.match.params.address)) {
       mixpanel.track(
         "Contract",
         {"address": nextProps.match.params.address.toLowerCase()}
