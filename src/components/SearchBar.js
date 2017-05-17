@@ -7,8 +7,9 @@ import { Row, Col } from 'react-flexbox-grid';
 import Autosuggest from 'react-autosuggest';
 import { withRouter, Link } from 'react-router-dom';
 import paths from '../lib/ApiPaths';
+import AccountIcon from './AccountIcon';
 
-const SMALL_SCREEN_WIDTH = 500;
+const SMALL_SCREEN_WIDTH = 560;
 
 class SearchBar extends React.Component {
   constructor(props) {
@@ -101,6 +102,14 @@ class SearchBar extends React.Component {
 
     return (
       <div className='SearchBarContainer' style={barStyle}>
+        <div
+          style={{
+            top: this.state.smallScreen ? 10 : 25,
+            position: 'absolute', right: this.state.smallScreen ? 10 : 25
+          }}
+        >
+          <AccountIcon userAddress={this.props.userAccount}/>
+        </div>
         {
           !this.props.reduced &&
           <div>
@@ -232,6 +241,18 @@ class SearchBar extends React.Component {
   }
 
   getInputElement() {
+    let minWidth;
+
+    if (this.state.smallScreen && !this.props.reduced) {
+      minWidth = 320;
+    } else if (!this.state.smallScreen && !this.props.reduced) {
+      minWidth = 390;
+    } else if (this.state.smallScreen && this.props.reduced) {
+      minWidth = 200;
+    } else if (!this.state.smallScreen && this.props.reduced) {
+      minWidth = 280;
+    }
+
     let hintText = this.props.reduced ? null : 'Search by address, ens domain, or term';
     if (!this.state.smallScreen && !this.props.reduced) {
       hintText += ', e.g. "token"';
@@ -244,7 +265,7 @@ class SearchBar extends React.Component {
     const style = {
       container: {
         position: 'relative',
-        minWidth: this.state.smallScreen ? 320 : 390
+        minWidth: minWidth
       },
       input: {
         height: 48,

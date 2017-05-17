@@ -52,6 +52,7 @@ class EOA extends React.Component {
       marginBottom: 10,
       marginLeft: -10
     };
+    const isUserAccount = this.props.address === this.props.userAddress;
 
     return (
       <div
@@ -61,7 +62,7 @@ class EOA extends React.Component {
           <div style={{ display: 'flex', maxWidth: 'inherit', width: 'inherit' }} >
             <CardTitle
               title={this.props.address}
-              subtitle={'Non-contract account'}
+              subtitle={isUserAccount ? 'Your Account' : 'Non-contract account'}
               titleStyle={{ wordWrap: 'break-word' }}
               subtitleStyle={{ wordWrap: 'break-word', marginTop: 4 }}
               style={{ maxWidth: '90%' }}
@@ -95,6 +96,7 @@ class EOA extends React.Component {
 
 EOA.propTypes = {
   address: React.PropTypes.string.isRequired,
+  userAddress: React.PropTypes.string,
 };
 
 export default withRouter(EOA);
