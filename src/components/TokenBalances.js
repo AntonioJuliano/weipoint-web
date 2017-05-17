@@ -111,7 +111,7 @@ class TokenBalances extends React.Component {
 
   formatBalance(balance) {
     const formatted = new BigNumber(balance.balance)
-      .dividedBy(new BigNumber('10e+' + balance.decimals))
+      .dividedBy(new BigNumber('10e+' + (balance.decimals - 1)))
       .toFormat(8);
 
     const truncated = formatted.replace(/\.?0+$/, '');
