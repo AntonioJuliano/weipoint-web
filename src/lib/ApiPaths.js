@@ -17,6 +17,9 @@ const paths = {
   },
   ens: {
     get: origin + '/api/v1/ens'
+  },
+  address: {
+    tokenBalances: origin + '/api/v1/address/tokenBalances'
   }
 }
 

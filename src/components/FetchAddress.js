@@ -109,7 +109,7 @@ class FetchAddress extends React.Component {
       case SEARCH_STATES.EOA:
         return <EOA
             address={this.props.match.params.address}
-            userAddress={this.props.userAddress}
+            userAccount={this.props.userAccount}
           />;
       case SEARCH_STATES.ERROR:
         return <SearchError />;
@@ -135,7 +135,7 @@ class FetchAddress extends React.Component {
 FetchAddress.propTypes = {
   web3: React.PropTypes.object.isRequired,
   contractStore: React.PropTypes.object.isRequired,
-  userAddress: React.PropTypes.string
+  userAccount: React.PropTypes.string
 }
 
 export default withRouter(FetchAddress);
