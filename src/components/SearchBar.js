@@ -108,7 +108,7 @@ class SearchBar extends React.Component {
             position: 'absolute', right: this.state.smallScreen ? 10 : 25
           }}
         >
-          <AccountIcon userAddress={this.props.userAccount}/>
+          <AccountIcon userAccount={this.props.userAccount}/>
         </div>
         {
           !this.props.reduced &&
@@ -391,7 +391,8 @@ SearchBar.propType = {
   onSearchClicked: React.PropTypes.func.isRequired,
   onBrowseClicked: React.PropTypes.func.isRequired,
   autocompleteStore: React.PropTypes.object.isRequired,
-  reduced: React.PropTypes.bool.isRequired
+  reduced: React.PropTypes.bool.isRequired,
+  userAccount: React.PropTypes.string
 };
 
 export default withRouter(SearchBar);

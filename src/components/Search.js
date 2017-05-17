@@ -69,7 +69,7 @@ class Search extends React.Component {
             render={() => <FetchAddress
               web3={this.props.web3}
               contractStore={this.state.contractStore}
-              userAddress={this.state.userAddress}
+              userAccount={this.state.userAccount}
             />}
           />
           <Route

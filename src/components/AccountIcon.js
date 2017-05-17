@@ -5,11 +5,11 @@ import '../lib/blockies.min.js'; /*global blockies:true*/
 
 class AccountIcon extends React.Component {
   render() {
-    if (!this.props.userAddress) {
+    if (!this.props.userAccount) {
       return null;
     }
 
-    const blocky = blockies.create({seed: this.props.userAddress}).toDataURL();
+    const blocky = blockies.create({seed: this.props.userAccount}).toDataURL();
 
     return (
       <div
@@ -17,7 +17,7 @@ class AccountIcon extends React.Component {
         aria-label='Your Account'
         style={{ cursor: 'pointer' }}
       >
-        <Link to={'/address/' + this.props.userAddress}>
+        <Link to={'/address/' + this.props.userAccount}>
           <Avatar
             src={blocky}
             size={37}
@@ -29,7 +29,7 @@ class AccountIcon extends React.Component {
 }
 
 AccountIcon.propTypes = {
-  userAddress: React.PropTypes.string
+  userAccount: React.PropTypes.string
 }
 
 export default AccountIcon;

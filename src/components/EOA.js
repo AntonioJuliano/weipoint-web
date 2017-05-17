@@ -3,9 +3,14 @@ import {Card, CardTitle} from 'material-ui/Card';
 import { withRouter } from 'react-router-dom';
 import { Row, Col } from 'react-flexbox-grid';
 import Divider from 'material-ui/Divider';
+import TokenBalances from './TokenBalances';
 
 const MIN_CONTENT_HEIGHT = 250;
 
+/**
+ * EOA - Externally owned account, e.g. a non-contract Ethereum account
+ * @type {Object}
+ */
 class EOA extends React.Component {
   constructor(props) {
     super(props);
@@ -52,7 +57,7 @@ class EOA extends React.Component {
       marginBottom: 10,
       marginLeft: -10
     };
-    const isUserAccount = this.props.address === this.props.userAddress;
+    const isUserAccount = this.props.address === this.props.userAccount;
 
     return (
       <div
@@ -63,7 +68,7 @@ class EOA extends React.Component {
             <CardTitle
               title={this.props.address}
               subtitle={isUserAccount ? 'Your Account' : 'Non-contract account'}
-              titleStyle={{ wordWrap: 'break-word' }}
+              titleStyle={{ overflowX: 'auto' }}
               subtitleStyle={{ wordWrap: 'break-word', marginTop: 4 }}
               style={{ maxWidth: '90%' }}
             />
@@ -74,8 +79,7 @@ class EOA extends React.Component {
             overflowY: 'auto',
             overflowX: 'hidden'
           }}>
-            <Divider style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%'}}/>
-            <Row style={{ marginTop: 10, marginBottom: 10 }} center='xs'>
+            <Row style={{ marginTop: 10, marginBottom: 20 }} center='xs'>
               <Col xs={10} style={{ textAlign: 'left' }}>
                 <div>
                   <div style={headerStyle}>
@@ -83,6 +87,19 @@ class EOA extends React.Component {
                   </div>
                   <div style={{ marginTop: 15, marginLeft: 12 }}>
                     {this.getInfoElement(this.props.address)}
+                  </div>
+                </div>
+              </Col>
+            </Row>
+            <Divider style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%'}}/>
+            <Row style={{ marginTop: 10, marginBottom: 10 }} center='xs'>
+              <Col xs={10} style={{ textAlign: 'left' }}>
+                <div>
+                  <div style={headerStyle}>
+                    {'Balances'}
+                  </div>
+                  <div style={{ marginTop: 15, marginLeft: 12 }}>
+                    <TokenBalances address={this.props.address} />
                   </div>
                 </div>
               </Col>
@@ -96,7 +113,7 @@ class EOA extends React.Component {
 
 EOA.propTypes = {
   address: React.PropTypes.string.isRequired,
-  userAddress: React.PropTypes.string,
+  userAccount: React.PropTypes.string,
 };
 
 export default withRouter(EOA);
