@@ -79,7 +79,7 @@ class TokenBalances extends React.Component {
         return (
           <div key='eth'>
             <Row>
-              <Col xs={2} xsOffset={0} smOffset={2}>
+              <Col xs={2} xsOffset={2} smOffset={2} style={{ width: 52 }}>
                 {b.symbol}
               </Col>
               <Col xs={6} style={{ textAlign: 'right', fontFamily: 'Roboto Mono' }}>
@@ -94,7 +94,7 @@ class TokenBalances extends React.Component {
       return (
         <div  key={ b.contractAddress }>
           <Row>
-            <Col xs={2} xsOffset={0} smOffset={2}>
+            <Col xs={2} xsOffset={2} smOffset={2} style={{ width: 52 }}>
               <Link to={'/address/' + b.contractAddress} style={{ textDecoration: 'none' }}>
                 {b.symbol}
               </Link>
