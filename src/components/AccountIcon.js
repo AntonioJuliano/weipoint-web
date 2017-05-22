@@ -2,6 +2,7 @@ import React from "react";
 import Avatar from 'material-ui/Avatar';
 import { Link } from 'react-router-dom';
 import '../lib/blockies.min.js'; /*global blockies:true*/
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 class AccountIcon extends React.Component {
   render() {
@@ -18,10 +19,14 @@ class AccountIcon extends React.Component {
         style={{ cursor: 'pointer' }}
       >
         <Link to={'/address/' + this.props.userAccount}>
-          <Avatar
-            src={blocky}
-            size={37}
-          />
+          <FloatingActionButton
+            mini={true}
+          >
+            <Avatar
+              src={blocky}
+              size={40}
+            />
+          </FloatingActionButton>
         </Link>
       </div>
     );
