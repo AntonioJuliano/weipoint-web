@@ -39,6 +39,17 @@ class Footer extends React.Component {
           <Divider style={{ margin: 'auto', width: '100%' }} />
           <div style={{ width: '100%', display: 'flex', marginTop: 16, marginRight: 0, justifyContent: 'flex-end' }}>
             <div style={{ width: 'auto', margin: 'auto', marginRight: 0, marginLeft: 'auto' }}>
+              <a
+                href='https://medium.com/weipoint'
+                style={linkStyles[0]}
+                onMouseEnter={ () => this.setState({ hovered: 0 })}
+                onMouseLeave={ () => this.setState({ hovered: null })}
+                target='_blank'
+              >
+                {'Blog'}
+              </a>
+            </div>
+            <div style={{ width: 'auto', margin: 'auto', marginRight: 0, marginLeft: 20 }}>
               <Link
                 to='/about'
                 style={linkStyles[0]}

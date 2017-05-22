@@ -8,6 +8,7 @@ import Autosuggest from 'react-autosuggest';
 import { withRouter, Link } from 'react-router-dom';
 import paths from '../lib/ApiPaths';
 import AccountIcon from './AccountIcon';
+import HelpButton from './HelpButton';
 
 const SMALL_SCREEN_WIDTH = 560;
 
@@ -88,7 +89,12 @@ class SearchBar extends React.Component {
   render() {
     let barSize = this.props.reduced ? (this.state.smallScreen ? 9 : 7) : 8;
 
-    const barStyle = this.props.reduced ? { marginTop: 20 } : { marginTop: 190 };
+    let barStyle = this.props.reduced ? { marginTop: 20 } : { marginTop: 190 };
+
+    if (!this.props.reduced && this.state.smallScreen) {
+      barStyle.marginTop = 150;
+    }
+
     let colStyle = { height: 48 }
 
     if (!this.props.reduced) {
@@ -105,9 +111,13 @@ class SearchBar extends React.Component {
         <div
           style={{
             top: this.state.smallScreen ? 10 : 25,
-            position: 'absolute', right: this.state.smallScreen ? 10 : 25
+            position: 'absolute', right: this.state.smallScreen ? 10 : 25,
+            display: 'flex'
           }}
         >
+          <div style={{ marginRight: 15 }}>
+            <HelpButton smallScreen={this.state.smallScreen} />
+          </div>
           <AccountIcon userAccount={this.props.userAccount}/>
         </div>
         {
@@ -152,7 +162,7 @@ class SearchBar extends React.Component {
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 cursor: 'pointer',
-                marginBottom: 10
+                marginBottom: 20
               }}
             >
               {'Weipoint'}

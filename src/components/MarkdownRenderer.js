@@ -9,7 +9,7 @@ class MarkdownRenderer extends React.Component {
           this.props.title &&
           <h2>{this.props.title}</h2>
         }
-        <Markdown source={this.props.content} />
+        <Markdown source={this.props.content} style={this.props.mdStyle} />
       </div>
     );
   }
@@ -17,7 +17,8 @@ class MarkdownRenderer extends React.Component {
 
 MarkdownRenderer.propTypes = {
   content: React.PropTypes.string.isRequired,
-  title: React.PropTypes.string
+  title: React.PropTypes.string,
+  mdStyle: React.PropTypes.object
 }
 
 export default MarkdownRenderer;

@@ -16,7 +16,7 @@ When you access our website or content, we or companies we work with may place s
 
 * Understand how the site is being used
 
-### How We Use The Personal Information Ww Collect
+### How We Use The Personal Information We Collect
 
 Our primary purpose in collecting personal information is to provide you with a secure, smooth, efficient, and customized experience. We may use your personal information to:
 
