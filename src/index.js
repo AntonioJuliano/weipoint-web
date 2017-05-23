@@ -1,3 +1,4 @@
+import "babel-polyfill";
 import './lib/Bugsnag';
 import React from 'react';
 import ReactDOM from 'react-dom';
