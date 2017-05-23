@@ -99,7 +99,6 @@ class SearchBar extends React.Component {
 
     if (!this.props.reduced) {
       colStyle.maxWidth = 550;
-      colStyle.margin = 'auto';
     } else {
       colStyle.maxWidth = 450;
       colStyle.marginTop = 'auto';

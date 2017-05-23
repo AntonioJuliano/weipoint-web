@@ -39,7 +39,7 @@ class Footer extends React.Component {
         <Col xs={10} style={{ marginLeft: 'auto', marginRight: 'auto', minWidth: 320 }}>
           <Divider style={{ margin: 'auto', width: '100%' }} />
           <div style={{ width: '100%', display: 'flex', marginTop: 16, marginRight: 0, justifyContent: 'flex-end' }}>
-            <div style={{ width: 'auto', margin: 'auto', marginRight: 0, marginLeft: 'auto' }}>
+            <div style={{ width: 'auto', margin: 'auto', marginRight: 0 }}>
               <a
                 href='https://medium.com/weipoint'
                 style={linkStyles[0]}
