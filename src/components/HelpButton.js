@@ -1,10 +1,10 @@
 import React from "react";
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import LiveHelpIcon from 'react-material-icons/icons/communication/live-help';
 import Popover from 'material-ui/Popover/Popover';
 import getHelpDoc from '../assets/docs/HelpDocs';
 import { withRouter } from 'react-router-dom';
 import MarkdownRenderer from './MarkdownRenderer';
+import Ionicon from 'react-ionicons';
 
 class HelpButton extends React.Component {
   constructor(props) {
@@ -69,7 +69,11 @@ class HelpButton extends React.Component {
               <MarkdownRenderer content={getHelpDoc(this.props.location)} />
             </div>
           </Popover>
-          <LiveHelpIcon />
+          <Ionicon
+            icon="ion-help"
+            fontSize="20px"
+            color='#FFFFFF'
+          />
         </FloatingActionButton>
       </div>
     );
