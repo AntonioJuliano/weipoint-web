@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="description" content="Discover the decentralized web. Search for Ethereum contracts and Dapps">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="loaderStyle.css">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Raleway|Roboto+Mono|Roboto:300,400,500" rel="stylesheet">
 
@@ -17,6 +18,12 @@ mixpanel.init("f0a14620f6d2e2692e46c636b9222036");</script>
     <title>Weipoint</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="loader-container">
+        <div class="loader-inner-container">
+          <div class="loader"></div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
