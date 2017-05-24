@@ -5,7 +5,11 @@ import Check from 'material-ui/svg-icons/navigation/check';
 import Close from 'material-ui/svg-icons/navigation/close';
 import { Row, Col } from 'react-flexbox-grid';
 import { Link } from 'react-router-dom';
-import { sendToken, formatBalance, hasBalance } from '../lib/services/tokenService';
+import {
+  sendToken,
+  formatBalance,
+  hasBalance,
+} from '../lib/services/tokenService';
 import TextField from 'material-ui/TextField';
 import mixpanel from '../lib/Mixpanel';
 
@@ -41,7 +45,8 @@ class TokenBalance extends React.Component {
       return null;
     }
 
-    if (!this.state.sendValue.match(/^[0-9]*\.?[0-9]+$/)) {
+    const regex = new RegExp('^[0-9]*(.[0-9]{1,num})?$'.replace('num', this.props.balance.decimals));
+    if (!this.state.sendValue.match(regex)) {
       return 'Invalid Amount';
     }
 

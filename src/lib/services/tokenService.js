@@ -51,6 +51,12 @@ function hasBalance(balance, input) {
   return bigNumBalance.comparedTo(bigNumInput) >= 0;
 }
 
+function supportsPrecision(token, input) {
+  const regex = new RegExp('.?[0-9]{0,num}$'.replace('num', token.decimals));
+  return input.match(regex);
+}
+
 module.exports.sendToken = sendToken;
 module.exports.formatBalance = formatBalance;
 module.exports.hasBalance = hasBalance;
+module.exports.supportsPrecision = supportsPrecision;
