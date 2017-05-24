@@ -10,7 +10,7 @@ import paths from '../lib/ApiPaths';
 import AccountIcon from './AccountIcon';
 import HelpButton from './HelpButton';
 
-const SMALL_SCREEN_WIDTH = 560;
+const SMALL_SCREEN_WIDTH = 676;
 
 class SearchBar extends React.Component {
   constructor(props) {

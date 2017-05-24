@@ -98,8 +98,12 @@ class EOA extends React.Component {
                   <div style={headerStyle}>
                     {'Balances'}
                   </div>
-                  <div style={{ marginTop: 15, marginLeft: 12 }}>
-                    <TokenBalances address={this.props.address} />
+                  <div style={{ marginTop: 15 }}>
+                    <TokenBalances
+                      address={this.props.address}
+                      web3={this.props.web3}
+                      isUserAccount={isUserAccount}
+                    />
                   </div>
                 </div>
               </Col>
@@ -114,6 +118,7 @@ class EOA extends React.Component {
 EOA.propTypes = {
   address: React.PropTypes.string.isRequired,
   userAccount: React.PropTypes.string,
+  web3: React.PropTypes.object.isRequired
 };
 
 export default withRouter(EOA);

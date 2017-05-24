@@ -27,13 +27,28 @@ injectTapEventPlugin();
 class App extends Component {
   constructor(props) {
     super(props);
-    if (typeof web3 !== 'undefined') {
-      this.web3 = new Web3(web3.currentProvider);
-    } else {
-      this.web3 = new Web3();
-    }
 
-    bluebird.promisifyAll(this.web3.eth);
+    let newWeb3;
+    if (typeof web3 !== 'undefined') {
+      newWeb3 = new Web3(web3.currentProvider);
+    } else {
+      newWeb3 = new Web3();
+
+      // This is needed because web3 could be injected after react starts
+      window.addEventListener('load', () => {
+        // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+        if (typeof web3 !== 'undefined') {
+          const updatedWeb3 = new Web3(web3.currentProvider);
+          bluebird.promisifyAll(updatedWeb3.eth);
+          this.setState({ web3: updatedWeb3 });
+        }
+      });
+    }
+    bluebird.promisifyAll(newWeb3.eth);
+
+    this.state = {
+      web3: newWeb3
+    };
   }
 
   render() {
@@ -56,7 +71,15 @@ class App extends Component {
           }}>
           <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
             <div style={{ minHeight: '100vh', flexDirection: 'column', display: 'flex' }}>
-              <Route path="/" render={() => <main style={{ flex: '1 1 auto' }}><Search web3={this.web3} /></main>}/>
+              <Route
+                path="/"
+                render={ () => {
+                  return (
+                    <main style={{ flex: '1 1 auto' }}>
+                      <Search web3={this.state.web3} />
+                    </main>
+                  );
+                }}/>
               <Footer />
             </div>
           </MuiThemeProvider>
