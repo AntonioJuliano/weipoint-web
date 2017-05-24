@@ -110,6 +110,7 @@ class FetchAddress extends React.Component {
         return <EOA
             address={this.props.match.params.address}
             userAccount={this.props.userAccount}
+            web3={this.props.web3}
           />;
       case SEARCH_STATES.ERROR:
         return <SearchError />;

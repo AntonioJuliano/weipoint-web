@@ -1,10 +1,9 @@
 import React from 'react';
 import paths from '../lib/ApiPaths';
 import LRU from 'lru-cache';
-import { Row, Col } from 'react-flexbox-grid';
-import { Link } from 'react-router-dom';
-import BigNumber from 'bignumber.js';
 import Divider from 'material-ui/Divider';
+import TokenBalance from './TokenBalance';
+import mixpanel from '../lib/Mixpanel';
 
 const balanceCache = LRU({
   max: 100,
@@ -29,11 +28,28 @@ class TokenBalances extends React.Component {
     } else {
       this.getTokenBalances(props.address);
     }
+
+    mixpanel.track(
+      "View Account",
+      {
+        address: props.address,
+        isUserAccount: props.isUserAccount
+      }
+    );
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.address !== this.props.address) {
       const cachedBalances = balanceCache.get(nextProps.address);
+
+      mixpanel.track(
+        "View Account",
+        {
+          address: nextProps.address,
+          isUserAccount: nextProps.isUserAccount
+        }
+      );
+
       if (cachedBalances) {
         this.setState({
           balances: cachedBalances
@@ -71,55 +87,24 @@ class TokenBalances extends React.Component {
       marginBottom: 10
     };
 
+    const thisRef = this;
+
     return balances.map( (b, i) => {
       const divider = i !== balances.length - 1 ?
         <Divider style={dividerStyle} /> : null;
 
-      if (b.isEth) {
-        return (
-          <div key='eth'>
-            <Row>
-              <Col xs={2} xsOffset={2} smOffset={2} style={{ width: 52 }}>
-                {b.symbol}
-              </Col>
-              <Col xs={6} style={{ textAlign: 'right', fontFamily: 'Roboto Mono' }}>
-                {this.formatBalance(b)}
-              </Col>
-            </Row>
-            {divider}
-          </div>
-        )
-      }
-
       return (
-        <div  key={ b.contractAddress }>
-          <Row>
-            <Col xs={2} xsOffset={2} smOffset={2} style={{ width: 52 }}>
-              <Link to={'/address/' + b.contractAddress} style={{ textDecoration: 'none' }}>
-                {b.symbol}
-              </Link>
-            </Col>
-            <Col xs={6} style={{ textAlign: 'right', fontFamily: 'Roboto Mono' }}>
-              {this.formatBalance(b)}
-            </Col>
-          </Row>
+        <div key={b.isEth ? 'eth' : b.contractAddress}>
+          <TokenBalance
+            balance={b}
+            isUserAccount={thisRef.props.isUserAccount}
+            web3={thisRef.props.web3}
+            address={this.props.address}
+          />
           {divider}
         </div>
       );
     });
-  }
-
-  formatBalance(balance) {
-    const decimals = balance.decimals > 0 ? balance.decimals - 1 : 0;
-    const formatted = new BigNumber(balance.balance)
-      .dividedBy(new BigNumber('10e+' + decimals))
-      .toFormat(8);
-
-    const truncated = formatted.replace(/\.?0+$/, '');
-    const numSpaces = formatted.length - truncated.length;
-
-    // Want decimal places to be aligned so give all the same decimal spacing
-    return truncated + '\u00a0'.repeat(numSpaces);
   }
 
   render() {
@@ -132,7 +117,9 @@ class TokenBalances extends React.Component {
 }
 
 TokenBalances.propTypes = {
-  address: React.PropTypes.string.isRequired
+  address: React.PropTypes.string.isRequired,
+  web3: React.PropTypes.object.isRequired,
+  isUserAccount: React.PropTypes.bool
 }
 
 export default TokenBalances;

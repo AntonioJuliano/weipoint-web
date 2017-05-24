@@ -24,7 +24,11 @@ class Search extends React.Component {
     this.getBodyElement = this.getBodyElement.bind(this);
     this.getUserAccount = this.getUserAccount.bind(this);
 
-    this.getUserAccount();
+    this.getUserAccount(props.web3);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.getUserAccount(nextProps.web3);
   }
 
   handleSearchBarClick(query) {
@@ -110,11 +114,11 @@ class Search extends React.Component {
     );
   }
 
-  async getUserAccount() {
-    if (!this.props.web3.isConnected()) {
+  async getUserAccount(web3) {
+    if (!web3.isConnected()) {
       return;
     }
-    const userAccounts = await this.props.web3.eth.getAccountsAsync();
+    const userAccounts = await web3.eth.getAccountsAsync();
 
     if (userAccounts) {
       this.setState({ userAccount: userAccounts[0] });
@@ -142,5 +146,9 @@ class Search extends React.Component {
     );
   }
 }
+
+Search.propTypes = {
+  web3: React.PropTypes.object.isRequired
+};
 
 export default withRouter(Search);

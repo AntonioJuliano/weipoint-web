@@ -154,7 +154,7 @@ class ContractFunction extends React.Component {
 
     bluebirdPromise.promisifyAll(this.props.web3.version);
     const networkVersion = await this.props.web3.version.getNetworkAsync();
-    if (networkVersion !== 1) {
+    if (networkVersion !== 1 && networkVersion !== '1') {
       this.setState({ requestState: 'error', error: 'Metamask not set to mainnet'});
     }
 
