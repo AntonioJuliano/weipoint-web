@@ -29,8 +29,11 @@ class App extends Component {
     super(props);
 
     let newWeb3;
+    let loaded = false;
+
     if (typeof web3 !== 'undefined') {
       newWeb3 = new Web3(web3.currentProvider);
+      loaded = true;
     } else {
       newWeb3 = new Web3();
 
@@ -40,14 +43,17 @@ class App extends Component {
         if (typeof web3 !== 'undefined') {
           const updatedWeb3 = new Web3(web3.currentProvider);
           bluebird.promisifyAll(updatedWeb3.eth);
-          this.setState({ web3: updatedWeb3 });
+          this.setState({ web3: updatedWeb3, isLoaded: true });
+        } else {
+          this.setState({ isLoaded: true });
         }
       });
     }
     bluebird.promisifyAll(newWeb3.eth);
 
     this.state = {
-      web3: newWeb3
+      web3: newWeb3,
+      isLoaded: loaded
     };
   }
 
@@ -76,7 +82,7 @@ class App extends Component {
                 render={ () => {
                   return (
                     <main style={{ flex: '1 1 auto' }}>
-                      <Search web3={this.state.web3} />
+                      <Search web3={this.state.web3} isLoaded={this.state.isLoaded} />
                     </main>
                   );
                 }}/>
