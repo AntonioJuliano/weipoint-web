@@ -41,18 +41,18 @@ class TokenBalance extends React.Component {
   }
 
   validateAmountInput() {
-    if (this.state.sendValue === '') {
+    if (this.state.sendValue.trim() === '') {
       return null;
     }
 
     const decimals = this.props.balance.decimals;
     const rStr = decimals !== 0 ? '^[0-9]*(.[0-9]{1,num})?$'.replace('num', decimals) : '^[0-9]+$';
     const regex = new RegExp(rStr);
-    if (!this.state.sendValue.match(regex)) {
+    if (!this.state.sendValue.trim().match(regex)) {
       return 'Invalid Amount';
     }
 
-    if (!hasBalance(this.props.balance, this.state.sendValue)) {
+    if (!hasBalance(this.props.balance, this.state.sendValue.trim())) {
       return `You don't have that much`;
     }
 
@@ -60,11 +60,11 @@ class TokenBalance extends React.Component {
   }
 
   validateAddressInput() {
-    if (this.state.sendAddress === '') {
+    if (this.state.sendAddress.trim() === '') {
       return null;
     }
 
-    if (!this.props.web3.isAddress(this.state.sendAddress)) {
+    if (!this.props.web3.isAddress(this.state.sendAddress.trim())) {
       return 'Invalid Address';
     }
 
@@ -75,8 +75,8 @@ class TokenBalance extends React.Component {
     return (
       this.validateAmountInput() === null
       && this.validateAddressInput() === null
-      && this.state.sendValue !== ''
-      && this.state.sendAddress !== ''
+      && this.state.sendValue.trim() !== ''
+      && this.state.sendAddress.trim() !== ''
     ) ? true : false;
   }
 
@@ -85,9 +85,9 @@ class TokenBalance extends React.Component {
       this.setState({ sendState: SEND_STATES.SENDING });
       const sendResult = await sendToken(
         this.props.balance,
-        this.state.sendValue,
+        this.state.sendValue.trim(),
         this.props.address,
-        this.state.sendAddress,
+        this.state.sendAddress.trim(),
         this.props.web3
       );
       this.setState({ sendState: SEND_STATES.APPROVED, sendResult: sendResult });
