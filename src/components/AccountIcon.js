@@ -20,7 +20,7 @@ class AccountIcon extends React.Component {
         aria-label='Your Account'
         style={{ cursor: 'pointer' }}
       >
-        <Link to={'/address/' + this.props.userAccount}>
+        <Link to='/wallet'>
           <FloatingActionButton
             mini={true}
           >

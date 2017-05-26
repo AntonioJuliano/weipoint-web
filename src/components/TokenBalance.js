@@ -45,7 +45,9 @@ class TokenBalance extends React.Component {
       return null;
     }
 
-    const regex = new RegExp('^[0-9]*(.[0-9]{1,num})?$'.replace('num', this.props.balance.decimals));
+    const decimals = this.props.balance.decimals;
+    const rStr = decimals !== 0 ? '^[0-9]*(.[0-9]{1,num})?$'.replace('num', decimals) : '^[0-9]+$';
+    const regex = new RegExp(rStr);
     if (!this.state.sendValue.match(regex)) {
       return 'Invalid Amount';
     }

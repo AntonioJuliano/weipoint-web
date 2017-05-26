@@ -2,7 +2,11 @@ import BigNumber from 'bignumber.js';
 import { Promise as bluebirdPromise } from 'bluebird';
 
 async function sendToken(token, amount, fromAddress, toAddress, web3) {
-  const decimals = token.decimals > 0 ? token.decimals - 1 : 0;
+  const decimals = token.decimals;
+  const bigNumAmount = decimals !== 0 ?
+    new BigNumber(amount).times(new BigNumber('10e+' + (decimals-1))) :
+    new BigNumber(amount);
+  console.log(bigNumAmount.toString());
 
   bluebirdPromise.promisifyAll(web3.version);
   const networkVersion = await web3.version.getNetworkAsync();
@@ -13,7 +17,6 @@ async function sendToken(token, amount, fromAddress, toAddress, web3) {
   web3.eth.defaultAccount = fromAddress;
 
   if (token.isEth) {
-    const bigNumAmount = new BigNumber(amount).times(new BigNumber('10e+' + decimals));
     const tx = {
       from: fromAddress,
       to: toAddress,
@@ -23,16 +26,12 @@ async function sendToken(token, amount, fromAddress, toAddress, web3) {
   } else {
     const contractInstance = web3.eth.contract(token.contractABI).at(token.contractAddress);
     bluebirdPromise.promisifyAll(contractInstance);
-    const bigNumAmount = new BigNumber(amount).times(new BigNumber('10e+' + decimals));
     return contractInstance.transferAsync(toAddress, bigNumAmount);
   }
 }
 
 function formatBalance(balance) {
-  const decimals = balance.decimals > 0 ? balance.decimals - 1 : 0;
-  const formatted = new BigNumber(balance.balance)
-    .dividedBy(new BigNumber('10e+' + decimals))
-    .toFormat(8);
+  const formatted = _bigNumBalance(balance.decimals, balance.balance).toFormat(8);
 
   const truncated = formatted.replace(/\.?0+$/, '');
   const numSpaces = formatted.length - truncated.length;
@@ -42,11 +41,15 @@ function formatBalance(balance) {
 }
 
 function hasBalance(balance, input) {
-  const bigNumBalance = new BigNumber(balance.balance);
-  const decimals = balance.decimals > 0 ? balance.decimals - 1 : 0;
-  const bigNumInput = new BigNumber(input).times(new BigNumber('10e+' + decimals));
+  const bigNumBalance = _bigNumBalance(balance.decimals, balance.balance);
+  const bigNumInput = new BigNumber(input);
 
   return bigNumBalance.comparedTo(bigNumInput) >= 0;
+}
+
+function _bigNumBalance(decimals, bal) {
+  const divisor = decimals !== 0 ? new BigNumber('10e+' + (decimals- 1)) : new BigNumber(1);
+  return new BigNumber(bal).dividedBy(divisor);
 }
 
 module.exports.sendToken = sendToken;
