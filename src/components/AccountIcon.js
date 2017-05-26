@@ -6,7 +6,9 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 class AccountIcon extends React.Component {
   render() {
-    if (!this.props.userAccount) {
+    if (!this.props.userAccount
+        || this.props.userAccount === 'none'
+        || this.props.userAccount === 'loading') {
       return null;
     }
 

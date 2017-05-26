@@ -10,6 +10,7 @@ import MarkdownRenderer from './MarkdownRenderer';
 import terms from '../assets/docs/terms';
 import privacy from '../assets/docs/privacy';
 import About from './About';
+import Wallet from './Wallet';
 
 class Search extends React.Component {
   constructor(props) {
@@ -18,17 +19,15 @@ class Search extends React.Component {
       searchStore: {},
       contractStore: {},
       autocompleteStore: {},
-      userAccount: null
+      userAccount: this.getUserAccount(props.web3)
     };
     this.handleSearchBarClick = this.handleSearchBarClick.bind(this);
     this.getBodyElement = this.getBodyElement.bind(this);
     this.getUserAccount = this.getUserAccount.bind(this);
-
-    this.getUserAccount(props.web3);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.getUserAccount(nextProps.web3);
+    this.setState({ userAccount: this.getUserAccount(nextProps.web3) });
   }
 
   handleSearchBarClick(query) {
@@ -81,6 +80,15 @@ class Search extends React.Component {
             render={() => <FetchDomain />}
           />
           <Route
+            path='/wallet'
+            render={() => <Wallet
+              isLoaded={this.props.isLoaded}
+              userAddress={this.state.userAccount}
+              contractStore={this.state.contractStore}
+              web3={this.props.web3}
+            />}
+          />
+          <Route
             path="/terms"
             render={() => <MarkdownRenderer
               content={terms}
@@ -114,15 +122,21 @@ class Search extends React.Component {
     );
   }
 
-  async getUserAccount(web3) {
+  getUserAccount(web3) {
     if (!web3.isConnected()) {
-      return;
+      return 'none';
     }
-    const userAccounts = await web3.eth.getAccountsAsync();
 
-    if (userAccounts) {
-      this.setState({ userAccount: userAccounts[0] });
-    }
+    const thisRef = this;
+    web3.eth.getAccountsAsync().then( userAccounts => {
+      if (userAccounts) {
+        thisRef.setState({ userAccount: userAccounts[0] });
+      } else {
+        thisRef.setState({ userAccount: 'none' });
+      }
+    }).catch( e => console.log(e) );
+
+    return 'loading';
   }
 
   render() {
@@ -148,7 +162,8 @@ class Search extends React.Component {
 }
 
 Search.propTypes = {
-  web3: React.PropTypes.object.isRequired
+  web3: React.PropTypes.object.isRequired,
+  isLoaded: React.PropTypes.bool
 };
 
 export default withRouter(Search);

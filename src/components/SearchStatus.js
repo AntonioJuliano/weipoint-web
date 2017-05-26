@@ -8,8 +8,8 @@ class SearchStatus extends React.Component {
       <div className="SearchResultContainer" style={{ marginTop: 25, textAlign: 'left' }}>
         <Card>
           <Row center='xs'>
-            <div style={{ display: 'flex', marginTop: 200, marginBottom: 200 }}>
-              <div>
+            <div style={{ marginTop: 200, marginBottom: 200 }}>
+              <div style={{ marginBottom: 20 }}>
                 {this.props.icon}
               </div>
               <div style={{ marginLeft: 20, marginTop: 'auto', marginBottom: 'auto', fontSize: 16 }}>
@@ -25,7 +25,7 @@ class SearchStatus extends React.Component {
 
 SearchStatus.propTypes = {
   icon: React.PropTypes.element.isRequired,
-  message: React.PropTypes.string
+  message: React.PropTypes.node
 };
 
 export default SearchStatus;
