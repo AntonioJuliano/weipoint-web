@@ -4,18 +4,25 @@ import LRU from 'lru-cache';
 import Divider from 'material-ui/Divider';
 import TokenBalance from './TokenBalance';
 import mixpanel from '../lib/Mixpanel';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 const balanceCache = LRU({
   max: 100,
   maxAge: 1000 * 60 * 5 // 5 minutes
 });
 
+const REQUEST_STATES = {
+  INITIAL: 'INITIAL',
+  COMPLETED: 'COMPLETED'
+};
+
 class TokenBalances extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      balances: []
+      balances: [],
+      requestState: REQUEST_STATES.INITIAL
     };
 
     this.getTokenBalances = this.getTokenBalances.bind(this);
@@ -23,7 +30,8 @@ class TokenBalances extends React.Component {
     const cachedBalances = balanceCache.get(props.address);
     if (cachedBalances) {
       this.state = {
-        balances: cachedBalances
+        balances: cachedBalances,
+        requestState: REQUEST_STATES.COMPLETED
       };
     } else {
       this.getTokenBalances(props.address);
@@ -52,10 +60,11 @@ class TokenBalances extends React.Component {
 
       if (cachedBalances) {
         this.setState({
-          balances: cachedBalances
+          balances: cachedBalances,
+          requestState: REQUEST_STATES.COMPLETED
         });
       } else {
-        this.setState({ balances: [] });
+        this.setState({ balances: [], requestState: REQUEST_STATES.INITIAL });
         this.getTokenBalances(nextProps.address);
       }
     }
@@ -72,7 +81,7 @@ class TokenBalances extends React.Component {
       const json = await response.json();
 
       balanceCache.set(address, json.balances);
-      this.setState({ balances: json.balances });
+      this.setState({ balances: json.balances, requestState: REQUEST_STATES.COMPLETED });
     } catch(e) {
       console.error(e);
     }
@@ -108,9 +117,36 @@ class TokenBalances extends React.Component {
   }
 
   render() {
+    let content;
+    switch (this.state.requestState) {
+      case REQUEST_STATES.INITIAL:
+        content = (
+          <div style={{ width: '100%' }}>
+            <RefreshIndicator
+              size={50}
+              left={0}
+              top={0}
+              loadingColor="#9b59b6"
+              status="loading"
+              style={{
+                position: 'relative',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                marginTop: 50
+              }}
+            />
+          </div>
+        );
+        break;
+      case REQUEST_STATES.COMPLETED:
+        content = this.getBalanceElements(this.state.balances);
+        break;
+      default:
+        console.error('Invalid requestState ' + this.state.requestState);
+    }
     return (
       <div>
-        {this.getBalanceElements(this.state.balances)}
+        {content}
       </div>
     );
   }

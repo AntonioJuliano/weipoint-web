@@ -1,6 +1,7 @@
 import React from "react";
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import SearchStatus from './SearchStatus';
+
 const style = {
   refresh: {
     display: 'inline-block',
