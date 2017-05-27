@@ -8,7 +8,7 @@ class SearchError extends React.Component {
     return (
       <SearchStatus
         icon={
-          <ErrorOutlineIcon color={red500} style={{ marginTop: 100, marginBottom: 100 }}/>
+          <ErrorOutlineIcon color={red500} />
         }
         message='We were unable to fetch your results. Please try again later.'
       />
