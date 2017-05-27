@@ -11,6 +11,7 @@ import terms from '../assets/docs/terms';
 import privacy from '../assets/docs/privacy';
 import About from './About';
 import Wallet from './Wallet';
+import { isEnsDomain } from '../lib/services/ensService';
 
 class Search extends React.Component {
   constructor(props) {
@@ -37,15 +38,11 @@ class Search extends React.Component {
 
     if (this.props.web3.isAddress(query)) {
       this.props.history.push('/address/' + query);
-    } else if (this.isEnsDomain(query)) {
+    } else if (isEnsDomain(query)) {
       this.props.history.push('/domain/' + query);
     } else {
       this.props.history.push('/search/' + query);
     }
-  }
-
-  isEnsDomain(query) {
-    return query.match(/^[a-zA-z0-9]+(\.?[a-zA-z0-9]+)+\.eth$/);
   }
 
   getBodyElement() {
