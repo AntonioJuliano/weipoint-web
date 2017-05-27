@@ -12,6 +12,9 @@ import {
 } from '../lib/services/tokenService';
 import TextField from 'material-ui/TextField';
 import mixpanel from '../lib/Mixpanel';
+import paths from '../lib/ApiPaths';
+import { isEnsDomain } from '../lib/services/ensService';
+import BigNumber from 'bignumber.js';
 
 const SEND_STATES = {
   INITIAL: 'INITIAL',
@@ -22,6 +25,11 @@ const SEND_STATES = {
   DENIED: 'DENIED'
 };
 
+const RESOLVER_STATES = {
+  RESOLVING: 'RESOLVING',
+  RESOLVED: 'RESOLVED'
+};
+
 class TokenBalance extends React.Component {
   constructor(props) {
     super(props);
@@ -29,44 +37,83 @@ class TokenBalance extends React.Component {
     this.state = {
       sendState: SEND_STATES.INITIAL,
       sendValue: '',
-      sendAddress: '',
-      sendResult: null
+      sendTo: '',
+      sendResult: null,
+      resolvedAddress: '',
+      resolverState: null
     };
 
     this.getContent = this.getContent.bind(this);
     this.validateAmountInput = this.validateAmountInput.bind(this);
-    this.validateAddressInput = this.validateAddressInput.bind(this);
+    this.validateToInput = this.validateToInput.bind(this);
     this.canSend = this.canSend.bind(this);
     this.send = this.send.bind(this);
+    this.resolve = this.resolve.bind(this);
+
+    this.resolver = {
+      to: null,
+      resolvedAddress: null
+    };
+    this.destinationAddress = '';
   }
 
   validateAmountInput() {
-    if (this.state.sendValue.trim() === '') {
+    const value = this.state.sendValue.trim();
+    if (value === '') {
       return null;
     }
 
     const decimals = this.props.balance.decimals;
-    const rStr = decimals !== 0 ? '^[0-9]*(.[0-9]{1,num})?$'.replace('num', decimals) : '^[0-9]+$';
+    const rStr = decimals !== 0 ? '^[0-9]*(\\.[0-9]{1,num})?$'.replace('num', decimals) : '^[0-9]+$';
     const regex = new RegExp(rStr);
-    if (!this.state.sendValue.trim().match(regex)) {
+    if (!value.match(regex)) {
       return 'Invalid Amount';
     }
 
-    if (!hasBalance(this.props.balance, this.state.sendValue.trim())) {
+
+    if (new BigNumber(value).comparedTo(new BigNumber(0)) < 1) {
+      return 'Invalid Amount';
+    }
+
+    if (!hasBalance(this.props.balance, value)) {
       return `You don't have that much`;
     }
 
     return null;
   }
 
-  validateAddressInput() {
-    if (this.state.sendAddress.trim() === '') {
+  validateToInput() {
+    const to = this.state.sendTo.trim();
+    if (to === '') {
       return null;
     }
 
-    if (!this.props.web3.isAddress(this.state.sendAddress.trim())) {
-      return 'Invalid Address';
+    // ENS Domain
+    if (isEnsDomain(to)) {
+
+      if (this.resolver.to !== to) {
+        this.resolver.to = to;
+        this.resolve(to);
+      }
+
+      if (this.state.resolverState === RESOLVER_STATES.RESOLVING) {
+        return 'Resolving...';
+      } else if (this.state.resolverState === RESOLVER_STATES.RESOLVED) {
+        if (this.props.web3.isAddress(this.resolver.resolvedAddress)) {
+          return null;
+        } else {
+          return 'Invalid Domain';
+        }
+      } else {
+        return 'Invalid';
+      }
     }
+
+    if (!this.props.web3.isAddress(to)) {
+      return 'Invalid Destination';
+    }
+
+    this.destinationAddress = to;
 
     return null;
   }
@@ -74,10 +121,31 @@ class TokenBalance extends React.Component {
   canSend() {
     return (
       this.validateAmountInput() === null
-      && this.validateAddressInput() === null
+      && this.validateToInput() === null
       && this.state.sendValue.trim() !== ''
-      && this.state.sendAddress.trim() !== ''
+      && this.state.sendTo.trim() !== ''
     ) ? true : false;
+  }
+
+  async resolve(to) {
+    const requestPath = paths.ens.get + `?domain=${to}`;
+
+    try {
+      const response = await fetch(requestPath, { method: 'get' });
+      if (response.status !== 200) {
+        throw new Error('Invalid response');
+      }
+      const json = await response.json();
+
+      if (this.resolver.to === to) {
+        this.resolver.resolvedAddress = json.address;
+        this.destinationAddress = json.address;
+        this.setState({ resolverState: RESOLVER_STATES.RESOLVED });
+      }
+    } catch(e) {
+      console.error(e);
+      this.setState({ resolverState: RESOLVER_STATES.RESOLVED });
+    }
   }
 
   async send() {
@@ -87,7 +155,7 @@ class TokenBalance extends React.Component {
         this.props.balance,
         this.state.sendValue.trim(),
         this.props.address,
-        this.state.sendAddress.trim(),
+        this.destinationAddress,
         this.props.web3
       );
       this.setState({ sendState: SEND_STATES.APPROVED, sendResult: sendResult });
@@ -163,11 +231,23 @@ class TokenBalance extends React.Component {
             </Col>
             <Col xs={4}>
               <TextField
-                hintText={'To'}
-                errorText={this.validateAddressInput()}
-                value={this.state.sendAddress}
-                onChange={ (e, v) => this.setState({ sendAddress: v }) }
+                hintText={'To (address or .eth domain)'}
+                errorText={this.validateToInput()}
+                value={this.state.sendTo}
+                onChange={ (e, v) => this.setState({
+                  sendTo: v,
+                  resolverState: RESOLVER_STATES.RESOLVING })
+                }
                 style={{ width: '100%' }}
+                spellCheck="false"
+                autoCorrect="off"
+                autoCapitalize="off"
+                hintStyle={{
+                  textOverflow: 'ellipsis',
+                  maxWidth: '100%',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden'
+                }}
               />
             </Col>
             <Col
@@ -195,11 +275,21 @@ class TokenBalance extends React.Component {
           </Row>
         );
       case SEND_STATES.CONFIRMING:
+        const dest = isEnsDomain(this.state.sendTo) ?
+          this.state.sendTo + ' (' + this.destinationAddress + ')' :
+          this.destinationAddress;
         return (
           <Row style={{ height: 48 }}>
             <Col xs={8} sm={7} smOffset={1} style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-              <div style={{ width: '100%', minWidth: '100%' }} >
-                {'Confirm sending ' + this.state.sendValue + ' ' + balance.symbol}
+              <div style={{
+                  width: '100%',
+                  minWidth: '100%',
+                  maxWidth: '100%',
+                  overflowY: 'auto',
+                  maxHeight: '100%'
+                }}
+              >
+                {'Confirm sending ' + this.state.sendValue + ' ' + balance.symbol + ' to ' + dest}
               </div>
             </Col>
             <Col
