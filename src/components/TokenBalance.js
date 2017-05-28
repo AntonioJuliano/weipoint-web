@@ -11,7 +11,7 @@ import {
   hasBalance,
 } from '../lib/services/tokenService';
 import TextField from 'material-ui/TextField';
-import mixpanel from '../lib/Mixpanel';
+import { trackEvent } from '../lib/Analytics';
 import paths from '../lib/ApiPaths';
 import { isEnsDomain } from '../lib/services/ensService';
 import BigNumber from 'bignumber.js';
@@ -160,14 +160,11 @@ class TokenBalance extends React.Component {
       );
       this.setState({ sendState: SEND_STATES.APPROVED, sendResult: sendResult });
 
-      mixpanel.track(
-        "Token Send",
-        {
-          token: this.props.balance.symbol,
-          txHash: sendResult
-        }
-      );
-
+      trackEvent({
+        category: 'Wallet',
+        action: 'Token Send',
+        label: this.props.balance.symbol,
+      });
     } catch(e) {
       console.error(e);
       this.setState({ sendState: SEND_STATES.DENIED });
@@ -207,10 +204,11 @@ class TokenBalance extends React.Component {
                   icon={<Send />}
                   onTouchTap={ () => {
                     this.setState({ sendState: SEND_STATES.CLICKED });
-                    mixpanel.track(
-                      "Token Send Start",
-                      { "token": this.props.balance.symbol }
-                    );
+                    trackEvent({
+                      category: 'Wallet',
+                      action: 'Token Send Start',
+                      label: this.props.balance.symbol,
+                    });
                   }}
                 />
               </Col>

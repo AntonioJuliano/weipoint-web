@@ -3,7 +3,6 @@ import paths from '../lib/ApiPaths';
 import LRU from 'lru-cache';
 import Divider from 'material-ui/Divider';
 import TokenBalance from './TokenBalance';
-import mixpanel from '../lib/Mixpanel';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 const balanceCache = LRU({
@@ -36,27 +35,11 @@ class TokenBalances extends React.Component {
     } else {
       this.getTokenBalances(props.address);
     }
-
-    mixpanel.track(
-      "View Account",
-      {
-        address: props.address,
-        isUserAccount: props.isUserAccount
-      }
-    );
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.address !== this.props.address) {
       const cachedBalances = balanceCache.get(nextProps.address);
-
-      mixpanel.track(
-        "View Account",
-        {
-          address: nextProps.address,
-          isUserAccount: nextProps.isUserAccount
-        }
-      );
 
       if (cachedBalances) {
         this.setState({

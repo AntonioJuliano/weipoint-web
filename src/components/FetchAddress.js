@@ -6,7 +6,6 @@ import NotFound from './NotFound';
 import SearchError from './SearchError';
 import Contract from './Contract';
 import { withRouter } from 'react-router-dom';
-import mixpanel from '../lib/Mixpanel';
 import paths from '../lib/ApiPaths';
 
 const SEARCH_STATES = {
@@ -31,10 +30,6 @@ class FetchAddress extends React.Component {
     this.search = this.search.bind(this);
     this.getBodyElement = this.getBodyElement.bind(this);
 
-    mixpanel.track(
-      "Contract", // Contract for legacy reasons
-      {"address": this.getAddress(props)}
-    );
     if (props.contractStore[this.getAddress(props)]) {
       this.state = {
         contract: props.contractStore[this.getAddress(props)],
@@ -63,10 +58,6 @@ class FetchAddress extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.getAddress(nextProps), this.getAddress(this.props))) {
-      mixpanel.track(
-        "Contract",
-        {"address": this.getAddress(nextProps)}
-      );
       if (nextProps.contractStore[this.getAddress(nextProps)]) {
         this.setState({
           contract: nextProps.contractStore[this.getAddress(nextProps)],

@@ -16,6 +16,7 @@ import clone from 'lodash.clone';
 import FlatButton from 'material-ui/FlatButton';
 import { withRouter } from 'react-router-dom';
 import paths from '../lib/ApiPaths';
+import { trackEvent } from '../lib/Analytics';
 
 const OVERVIEW = 'OVERVIEW';
 const VIEW_SOURCE = 'VIEW_SOURCE';
@@ -75,6 +76,28 @@ class Contract extends React.Component {
     const tags = metadata.tags;
     const description = metadata.description;
     let link = metadata.link;
+
+    if (tags) {
+      trackEvent({
+        category: 'Contract',
+        action: 'Add Metadata',
+        label: 'Tag'
+      });
+    }
+    if (description) {
+      trackEvent({
+        category: 'Contract',
+        action: 'Add Metadata',
+        label: 'Description'
+      });
+    }
+    if (link) {
+      trackEvent({
+        category: 'Contract',
+        action: 'Add Metadata',
+        label: 'Link'
+      });
+    }
 
     let request = { address: this.state.contract.address };
     let contractClone = clone(this.state.contract);
@@ -147,6 +170,11 @@ class Contract extends React.Component {
       if (response.status !== 200) {
         throw Error("Upload source request to server failed");
       }
+
+      trackEvent({
+        category: 'Contract',
+        action: 'Upload Source'
+      });
 
       const updatedContract = update(this.state.contract, {
         source: { $set: json.contract.source },

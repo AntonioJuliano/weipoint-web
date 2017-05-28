@@ -5,6 +5,7 @@ import getHelpDoc from '../assets/docs/HelpDocs';
 import { withRouter } from 'react-router-dom';
 import MarkdownRenderer from './MarkdownRenderer';
 import Ionicon from 'react-ionicons';
+import { trackEvent } from '../lib/Analytics';
 
 class HelpButton extends React.Component {
   constructor(props) {
@@ -23,9 +24,15 @@ class HelpButton extends React.Component {
     // This prevents ghost click.
     event.preventDefault();
 
+    trackEvent({
+      category: 'Help',
+      action: 'Help Clicked',
+      label: this.props.location
+    });
+
     this.setState({
       showHelp: !this.state.showHelp,
-      anchorEl: event.currentTarget,
+      anchorEl: event.currentTarget
     });
   };
 

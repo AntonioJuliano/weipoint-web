@@ -7,8 +7,8 @@ import ErrorOutlineIcon from 'react-material-icons/icons/alert/error-outline';
 import { red500 } from 'material-ui/styles/colors';
 import { Promise as bluebirdPromise } from 'bluebird';
 import isEqual from 'lodash.isequal';
-import mixpanel from '../lib/Mixpanel';
 import paths from '../lib/ApiPaths';
+import { trackEvent } from '../lib/Analytics';
 
 class ContractFunction extends React.Component {
   constructor(props) {
@@ -169,11 +169,11 @@ class ContractFunction extends React.Component {
           to: this.props.address,
           value: this.getPayableValueInWei()
         });
-        mixpanel.track(
-          "Function",
-          {"address": this.props.address,
-           "name": this.props.abi.name}
-        );
+        trackEvent({
+          category: 'Contract',
+          action: 'Call Function',
+          label: this.props.abi.name
+        });
         this.setState({ requestState: 'completed', result: 'sent' });
       } catch (e) {
         let errorString = e.toString();

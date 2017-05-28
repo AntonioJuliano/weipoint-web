@@ -5,7 +5,6 @@ import PendingSearch from './PendingSearch';
 import SearchError from './SearchError';
 import SearchResults from './SearchResults';
 import { withRouter } from 'react-router-dom';
-import mixpanel from '../lib/Mixpanel';
 import paths from '../lib/ApiPaths';
 
 // The maximum number of results to be fetched from server
@@ -95,11 +94,6 @@ class TagSearch extends React.Component {
     const index = this.getIndex(props);
 
     const requestPath = paths.search.get + `?query=${query}&index=${index}&size=${PAGE_SIZE}`;
-
-    mixpanel.track(
-      "Search",
-      {"query": query}
-    );
 
     try {
       const response = await fetch(requestPath, { method: 'get' });

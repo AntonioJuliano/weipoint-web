@@ -3,7 +3,6 @@ import isEqual from 'lodash.isequal';
 import PendingSearch from './PendingSearch';
 import SearchError from './SearchError';
 import { withRouter } from 'react-router-dom';
-import mixpanel from '../lib/Mixpanel';
 import paths from '../lib/ApiPaths';
 import DomainInfo from './DomainInfo';
 
@@ -27,19 +26,11 @@ class FetchContract extends React.Component {
     this.lookup = this.lookup.bind(this);
     this.getBodyElement = this.getBodyElement.bind(this);
 
-    mixpanel.track(
-      "Domain",
-      {"domain": props.match.params.domain.toLowerCase()}
-    );
     this.lookup(props);
   }
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(nextProps, this.props)) {
-      mixpanel.track(
-        "Domain",
-        {"domain": nextProps.match.params.domain.toLowerCase()}
-      );
       this.setState(initialState);
       this.lookup(nextProps);
     }
