@@ -8,7 +8,7 @@ import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom';
-import withTracker from './lib/withTracker';
+import { withTracker } from './lib/GoogleAnalytics';
 
 ReactDOM.render(
   <Router>
