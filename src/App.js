@@ -14,7 +14,6 @@ import theme from './lib/theme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {
-  BrowserRouter as Router,
   Route
 } from 'react-router-dom';
 import Footer from './components/Footer';
@@ -59,7 +58,7 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
+      <div>
         <div className='App'
           style={{
             backgroundColor: '#efefef',
@@ -90,7 +89,7 @@ class App extends Component {
             </div>
           </MuiThemeProvider>
         </div>
-      </Router>
+      </div>
     );
   }
 }

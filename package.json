@@ -67,6 +67,7 @@
     "react-copy-to-clipboard": "^4.2.3",
     "react-dom": "^15.4.1",
     "react-flexbox-grid": "^0.10.2",
+    "react-ga": "^2.2.0",
     "react-ionicons": "^1.5.7",
     "react-material-icons": "^1.0.1",
     "react-measure": "^1.4.6",
