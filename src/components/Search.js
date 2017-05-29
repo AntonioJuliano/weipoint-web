@@ -131,7 +131,7 @@ class Search extends React.Component {
       } else {
         thisRef.setState({ userAccount: 'none' });
       }
-    }).catch( e => console.log(e) );
+    }).catch( e => console.error(e) );
 
     return 'loading';
   }

@@ -6,7 +6,6 @@ async function sendToken(token, amount, fromAddress, toAddress, web3) {
   const bigNumAmount = decimals !== 0 ?
     new BigNumber(amount).times(new BigNumber('10e+' + (decimals-1))) :
     new BigNumber(amount);
-  console.log(bigNumAmount.toString());
 
   bluebirdPromise.promisifyAll(web3.version);
   const networkVersion = await web3.version.getNetworkAsync();
