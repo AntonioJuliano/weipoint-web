@@ -40,7 +40,8 @@ class TokenBalance extends React.Component {
       sendTo: '',
       sendResult: null,
       resolvedAddress: '',
-      resolverState: null
+      resolverState: null,
+      showIcon: true
     };
 
     this.getContent = this.getContent.bind(this);
@@ -172,20 +173,63 @@ class TokenBalance extends React.Component {
   }
 
   getContent(sendState, balance) {
-    const symbolElement = balance.isEth ? 'ETH' : (
-      <Link to={'/address/' + balance.contractAddress} style={{ textDecoration: 'none' }}>
-        {balance.symbol}
-      </Link>
+    let imgStyle = {
+      width: 20,
+      height: 20,
+      marginRight: 5,
+      minWidth: 20,
+      maxWidth: 20,
+      minHeight: 20,
+      maxHeight: 20
+    };
+    if (!this.state.showIcon) {
+      imgStyle.visibility = 'hidden';
+      imgStyle.height = 0;
+      imgStyle.minHeight = 0;
+      imgStyle.maxHeight = 0;
+      imgStyle.width = 0;
+      imgStyle.minWidth = 0;
+      imgStyle.maxWidth = 0;
+      imgStyle.marginRight = 0;
+    }
+    const thisRef = this;
+    const imgName = balance.isEth ? 'eth' : balance.contractAddress;
+    console.log(imgName)
+    const img = (
+      <img
+        src={'tokens/' + imgName + '.png'}
+        style={imgStyle}
+        onError={ () => thisRef.setState({ showIcon: false })}
+        alt=''
+      >
+      </img>
     );
+    let symbolElement = (
+      <div style={{ display: 'flex' }}>
+        {img}
+        {balance.symbol}
+      </div>
+    );
+
+    if (!balance.isEth) {
+      symbolElement = (
+        <Link
+          to={'/address/' + balance.contractAddress}
+          style={{ textDecoration: 'none', marginTop: 'auto', marginBottom: 'auto' }}
+        >
+          {symbolElement}
+        </Link>
+      );
+    }
 
     switch (sendState) {
       case SEND_STATES.INITIAL:
         return (
           <Row  style={{ height: 48 }}>
-            <Col xs={2} smOffset={1} style={{ width: 52, marginTop: 'auto', marginBottom: 'auto' }}>
+            <Col xs={3} sm={2} smOffset={1} style={{ width: 52, marginTop: 'auto', marginBottom: 'auto' }}>
               {symbolElement}
             </Col>
-            <Col xs={6} style={{
+            <Col xs={5} style={{
               overflowX: 'auto',
               textAlign: 'right',
               fontFamily: 'Roboto Mono',
