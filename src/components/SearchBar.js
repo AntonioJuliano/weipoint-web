@@ -122,24 +122,26 @@ class SearchBar extends React.Component {
         {
           !this.props.reduced &&
           <div>
-            <div style={{
+            <h1 style={{
               marginLeft: 'auto',
               marginRight: 'auto',
               fontSize: 52,
               fontFamily: "Raleway, sans-serif",
-              marginBottom: 12
+              marginBottom: 12,
+              fontWeight: 'normal'
             }}>
               {'Weipoint'}
-            </div>
-            <div style={{
+            </h1>
+            <h2 style={{
               marginLeft: 'auto',
               marginRight: 'auto',
               fontSize: 18,
               fontFamily: "Raleway, sans-serif",
-              marginBottom: 22
+              marginBottom: 22,
+              fontWeight: 'normal'
             }}>
               {'Search the decentralized web'}
-            </div>
+            </h2>
           </div>
         }
         {
@@ -154,18 +156,19 @@ class SearchBar extends React.Component {
               color: 'inherit'
             }}
           >
-            <div
+            <h1
               style={{
                 fontSize: 22,
                 fontFamily: "Raleway, sans-serif",
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 cursor: 'pointer',
-                marginBottom: 20
+                marginBottom: 20,
+                fontWeight: 'normal'
               }}
             >
               {'Weipoint'}
-            </div>
+            </h1>
           </Link>
         }
         <div className="SearchTextField" style={{ marginBottom: 20 }}>
@@ -187,14 +190,18 @@ class SearchBar extends React.Component {
               >
                 <Col
                   smOffset={1}
-                  style={{
-                    fontSize: 22,
-                    fontFamily: "Raleway, sans-serif",
-                    marginRight: 12,
-                    cursor: 'pointer'
-                  }}
                 >
-                  {'Weipoint'}
+                  <h1
+                    style={{
+                      fontSize: 22,
+                      fontFamily: "Raleway, sans-serif",
+                      marginRight: 12,
+                      cursor: 'pointer',
+                      fontWeight: 'normal'
+                    }}
+                  >
+                    {'Weipoint'}
+                  </h1>
                 </Col>
               </Link>
             }
