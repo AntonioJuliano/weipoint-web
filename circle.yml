@@ -5,7 +5,7 @@ general:
 machine:
   timezone: America/Los_Angeles
   node:
-    version: 6.10.3
+    version: 8.0.0
 dependencies:
   pre:
     - aws configure set region us-east-1
