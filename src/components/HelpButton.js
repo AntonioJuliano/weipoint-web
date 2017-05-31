@@ -27,7 +27,7 @@ class HelpButton extends React.Component {
     trackEvent({
       category: 'Help',
       action: 'Help Clicked',
-      label: this.props.location
+      label: this.props.location.pathname
     });
 
     this.setState({

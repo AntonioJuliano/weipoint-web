@@ -27,12 +27,20 @@ function withTracker(WrappedComponent) {
 };
 
 function trackEvent({ category, action, label, value }) {
-  GoogleAnalytics.event({
-    category,
-    action,
-    label,
-    value
-  });
+  let event = {
+    category: category,
+    action: action
+  };
+
+  if (label) {
+    event.label = label;
+  }
+
+  if (value) {
+    event.value = value;
+  }
+
+  GoogleAnalytics.event(event);
 }
 
 function setUser(id) {
