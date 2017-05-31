@@ -1,6 +1,6 @@
 This Privacy Policy describes how Weipoint, Inc. ("Weipoint") collects, uses, stores, shares, and protects your information whenever you use weipoint.com, or any other Weipoint service. By using Weipoint, you consent to the data practices prescribed in this statement. We may periodically post changes to this Privacy Policy on this page, and it is your responsibility to review this Privacy Policy frequently and we encourage you to visit this page often. When required by law, we will notify you of any changes to this Privacy Policy.
 
-*Last updated 4/25/17*
+*Last updated 5/30/17*
 
 ### Motivation
 Digital technologies give us the ability to be as anonymous as we want to be. We fully respect this, and believe it's everyone's right to control their digital identity. On the other hand, we also want to best be able to understand how users are using the site in order to best make improvements, which requires tracking metrics and other data about how the site is being used. In order to best balance these we collect limited information such as what addresses use our service, what is being searched, and other information to identify distinct sessions. That said, if you ever want to be more anonymous, you're welcome to visit the site over Tor, get new addresses, or take other digital steps to protect your privacy. Read on for more details.
@@ -12,7 +12,7 @@ As of now there is no signup, or other way to collect other personal information
 
 ### How We Use Cookies
 
-When you access our website or content, we or companies we work with may place small data files called cookies or pixel tags on your computer or other device. We use these technologies to:
+When you access our website or content, we or companies we work with may place small data files called cookies or pixel tags on your computer or other device. We use Google Analytics Advertising Features to better understand our user base. You can opt out by using the Google Analytics Opt-out Browser Add-on. We use these technologies to:
 
 * Understand how the site is being used
 
