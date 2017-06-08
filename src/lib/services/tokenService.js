@@ -30,7 +30,14 @@ async function sendToken(token, amount, fromAddress, toAddress, web3) {
 }
 
 function formatBalance(balance) {
-  const formatted = _bigNumBalance(balance.decimals, balance.balance).toFormat(8);
+  const bigNumBalance = _bigNumBalance(balance.decimals, balance.balance);
+
+  // Format very small balances
+  if (bigNumBalance.comparedTo(new BigNumber(0)) > 0 && bigNumBalance.comparedTo(new BigNumber(.00000001)) < 0) {
+    return bigNumBalance.toFormat(16);
+  }
+
+  const formatted = bigNumBalance.toFormat(8);
 
   const truncated = formatted.replace(/\.?0+$/, '');
   const numSpaces = formatted.length - truncated.length;
