@@ -57,6 +57,7 @@
     "classnames": "^2.2.5",
     "flexboxgrid": "^6.3.1",
     "immutability-helper": "^2.1.2",
+    "kbpgp": "^2.0.72",
     "lodash.clone": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lru-cache": "^4.0.2",
