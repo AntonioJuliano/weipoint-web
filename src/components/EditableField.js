@@ -1,8 +1,8 @@
 import React from "react";
 import TextField from 'material-ui/TextField';
-import AddIcon from 'react-material-icons/icons/content/add';
-import RemoveIcon from 'react-material-icons/icons/content/remove';
 import Snackbar from 'material-ui/Snackbar';
+import Edit from 'material-ui/svg-icons/image/edit';
+import Close from 'material-ui/svg-icons/navigation/close';
 
 const MAX_LENGTH = 100;
 
@@ -12,8 +12,9 @@ class EditableField extends React.Component {
     this.state = {
       value: '',
       error: '',
-      showAddField: false,
-      showReviewingMessage: false
+      editing: false,
+      showReviewingMessage: false,
+      showButton: false
     };
 
     this.getElements = this.getElements.bind(this);
@@ -37,22 +38,23 @@ class EditableField extends React.Component {
       }
       if (this.props.validate(this.state.value.trim()) === '') {
         const showMessage = !(this.props.autoAcceptFirst && !this.props.value);
-        this.setState({ value: '', showAddField: false, showReviewingMessage: showMessage });
+        this.setState({ value: '', editing: false, showReviewingMessage: showMessage });
         this.props.add(this.state.value.trim());
       }
     }
   }
 
   getAddElement() {
-    const hintText = this.props.value ? 'Edit' : 'Add';
+    const size = 18;
     const iconStyle = {
       marginTop: 'auto',
       marginBottom: 'auto',
-      width: 24,
-      height: 24,
-      marginLeft: 10
+      width: size,
+      height: size,
+      marginLeft: 10,
+      lineHeight: 0
     };
-    if (this.state.showAddField) {
+    if (this.state.editing) {
       return (
         <div key='addDescription' style={{ display: 'flex' }}>
           <div style={iconStyle}>
@@ -60,41 +62,47 @@ class EditableField extends React.Component {
               className="hint--bottom-right hint--rounded"
               aria-label="Hide"
               style={{
-                width: 24,
-                height: 24,
+                width: size,
+                height: size,
                 cursor: 'pointer'
               }}
-              onClick={ e => this.setState({ showAddField: false })}
+              onClick={ e => this.setState({ editing: false })}
             >
-              <RemoveIcon />
+              <Close color='#424242' style={{ width: size, height: size }} hoverColor='#000000' />
             </span>
           </div>
-          <TextField
-            hintText={hintText}
-            onChange={this.onChange}
-            value={this.state.value}
-            style={{ width: 260, marginLeft: 10 }}
-            onKeyPress={this.onKeyPress}
-            errorText={this.state.error}
-            inputStyle={{ fontSize: 14 }}
-            hintStyle={{ fontSize: 14 }}
-          />
+
         </div>
       );
     } else {
+      let hoverDescription = this.props.value ? "Edit" : "Add";
+      if (this.props.editHoverDescription) {
+        hoverDescription += ' ';
+        hoverDescription += this.props.editHoverDescription;
+      }
       return (
         <div style={iconStyle} key='addDescription'>
           <span
             className="hint--bottom-right hint--rounded"
-            aria-label={this.props.value ? "Edit" : "Add"}
+            aria-label={hoverDescription}
             style={{
-              width: 24,
-              height: 24,
+              width: size,
+              height: size,
               cursor: 'pointer'
             }}
-            onClick={ e => this.setState({ showAddField: true })}
+            onClick={ e => this.setState({
+              editing: true,
+              value: this.props.value || ''
+            })}
           >
-            <AddIcon />
+            <Edit
+              color='#424242'
+              style={{
+                width: size,
+                height: size,
+              }}
+              hoverColor='#000000'
+            />
           </span>
         </div>
       );
@@ -111,15 +119,35 @@ class EditableField extends React.Component {
   getElements() {
     let elements = [];
     const description = this.props.value || this.props.defaultValue
-    elements.push(
-      <div
-        style={{ fontStyle: 'italic', marginTop: 'auto', marginBottom: 'auto' }}
-        key='description'
-      >
-        {description}
-      </div>
-    );
-    if (this.props.showAdd) {
+    if (this.state.editing) {
+      const hintText = this.props.value ? 'Edit' : 'Add';
+      elements.push(
+        <TextField
+          hintText={hintText}
+          onChange={this.onChange}
+          value={this.state.value}
+          style={{ width: 220 }}
+          onKeyPress={this.onKeyPress}
+          errorText={this.state.error}
+          inputStyle={{ fontSize: 14 }}
+          hintStyle={{ fontSize: 14 }}
+          key='editField'
+        />
+      )
+    } else {
+      let style = this.props.valueStyle || { fontStyle: 'italic' };
+      style.marginTop = 'auto';
+      style.marginBottom = 'auto';
+      elements.push(
+        <div
+          style={style}
+          key='description'
+        >
+          {description}
+        </div>
+      );
+    }
+    if (this.props.showAdd && (!this.props.autohideButton || this.state.showButton)) {
       elements.push(this.getAddElement());
     }
     return elements;
@@ -133,7 +161,18 @@ class EditableField extends React.Component {
           flexWrap: 'wrap',
           height: 48,
           fontSize: 14
-        }}>
+        }}
+        onMouseEnter={ () => {
+          if (this.props.autohideButton && !this.state.showButton) {
+            this.setState({ showButton: true });
+          }
+        }}
+        onMouseLeave={ () => {
+          if (this.props.autohideButton && this.state.showButton) {
+            this.setState({ showButton: false });
+          }
+        }}
+      >
         {elements}
         <Snackbar
           open={this.state.showReviewingMessage}
@@ -156,7 +195,10 @@ EditableField.propTypes = {
   autoAcceptFirst: React.PropTypes.bool.isRequired,
   add: React.PropTypes.func,
   showAdd: React.PropTypes.bool.isRequired,
-  validate: React.PropTypes.func.isRequired
+  validate: React.PropTypes.func.isRequired,
+  valueStyle: React.PropTypes.object,
+  autohideButton: React.PropTypes.bool,
+  editHoverDescription: React.PropTypes.string
 };
 
 export default EditableField;
