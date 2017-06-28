@@ -50,6 +50,7 @@ class ContractOverview extends React.Component {
               defaultValue={'No Description Added'}
               autoAcceptFirst={true}
               validate={this.validateDescription}
+              editHoverDescription={'Overview'}
             />
           </Col>
         </Row>
@@ -67,7 +68,8 @@ class ContractOverview extends React.Component {
                 defaultValue={'No Official Site Added'}
                 autoAcceptFirst={false}
                 validate={this.validateLink}
-                />
+                editHoverDescription={'Website'}
+              />
             </div>
             <div style={{ marginTop: 10, marginBottom: 10, fontSize: 14 }}>
               {'View on '}

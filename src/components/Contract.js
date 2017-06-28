@@ -17,6 +17,7 @@ import FlatButton from 'material-ui/FlatButton';
 import { withRouter } from 'react-router-dom';
 import paths from '../lib/ApiPaths';
 import { trackEvent } from '../lib/Analytics';
+import EditableField from './EditableField';
 
 const OVERVIEW = 'OVERVIEW';
 const VIEW_SOURCE = 'VIEW_SOURCE';
@@ -72,11 +73,7 @@ class Contract extends React.Component {
     this.props.contractStore[this.props.contract.address] = updatedContract;
   }
 
-  async addMetadata(metadata) {
-    const tags = metadata.tags;
-    const description = metadata.description;
-    let link = metadata.link;
-
+  async addMetadata({ tags, description, link, name }) {
     if (tags) {
       trackEvent({
         category: 'Contract',
@@ -98,6 +95,13 @@ class Contract extends React.Component {
         label: 'Link'
       });
     }
+    if (name) {
+      trackEvent({
+        category: 'Contract',
+        action: 'Add Metadata',
+        label: 'name'
+      });
+    }
 
     let request = { address: this.state.contract.address };
     let contractClone = clone(this.state.contract);
@@ -116,6 +120,9 @@ class Contract extends React.Component {
         link = 'http://' + link;
       }
       request.link = link;
+    }
+    if (name) {
+      request.name = name;
     }
     this.updateContract(contractClone);
 
@@ -339,7 +346,19 @@ class Contract extends React.Component {
               />
             }
             <CardTitle
-              title={this.state.contract.name || "Contract"}
+              title={
+                <EditableField
+                  value={this.state.contract.name || "Contract"}
+                  add={ v => this.addMetadata({ name: v }) }
+                  showAdd={true}
+                  defaultValue={'Contract'}
+                  autoAcceptFirst={false}
+                  validate={ () => ''}
+                  valueStyle={{ fontSize: 24 }}
+                  autohideButton={true}
+                  editHoverDescription={'Contract Name'}
+                />
+              }
               subtitle={this.state.contract.address}
               titleStyle={{ wordWrap: 'break-word' }}
               subtitleStyle={{ wordWrap: 'break-word' }}
