@@ -92,7 +92,7 @@ class EditableField extends React.Component {
             }}
             onClick={ e => this.setState({
               editing: true,
-              value: this.props.value || ''
+              value: this.props.valueString || ''
             })}
           >
             <Edit
@@ -191,6 +191,7 @@ class EditableField extends React.Component {
 
 EditableField.propTypes = {
   value: React.PropTypes.node,
+  valueString: React.PropTypes.string,
   defaultValue: React.PropTypes.string.isRequired,
   autoAcceptFirst: React.PropTypes.bool.isRequired,
   add: React.PropTypes.func,

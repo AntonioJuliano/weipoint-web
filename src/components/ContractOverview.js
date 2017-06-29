@@ -45,6 +45,7 @@ class ContractOverview extends React.Component {
             </div>
             <EditableField
               value={this.props.contract.description}
+              valueString={this.props.contract.description}
               add={ v => this.props.addMetadata({ description: v }) }
               showAdd={true}
               defaultValue={'No Description Added'}
@@ -63,6 +64,7 @@ class ContractOverview extends React.Component {
             <div style={{ marginTop: 10, marginBottom: 10, display: 'flex' }}>
               <EditableField
                 value={linkValue}
+                valueString={this.props.contract.link}
                 add={ v => this.props.addMetadata({ link: v }) }
                 showAdd={true}
                 defaultValue={'No Official Site Added'}

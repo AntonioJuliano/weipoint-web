@@ -51,7 +51,7 @@ class Contract extends React.Component {
   }
 
   updateDimensions() {
-    this.setState({ height: window.innerHeight - 321 });
+    this.setState({ height: window.innerHeight - 355 });
   }
 
   componentDidMount() {
@@ -349,6 +349,7 @@ class Contract extends React.Component {
               title={
                 <EditableField
                   value={this.state.contract.name || "Contract"}
+                  valueString={this.state.contract.name || "Contract"}
                   add={ v => this.addMetadata({ name: v }) }
                   showAdd={true}
                   defaultValue={'Contract'}
