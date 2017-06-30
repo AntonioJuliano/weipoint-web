@@ -30,8 +30,9 @@ class Editor extends React.Component {
           {this.state.set >= 1 && <AceEditor
             width={width + 'px'}
             height={height + 'px'}
-            mode="javascript"
-            theme="tomorrow"
+            mode={this.props.mode || 'javascript'}
+            theme='tomorrow'
+            showGutter={this.props.showGutter}
             readOnly={this.props.readOnly}
             name={this.props.name}
             value={this.props.value}
@@ -47,5 +48,14 @@ class Editor extends React.Component {
     );
   }
 }
+
+Editor.propTypes = {
+  readOnly: React.PropTypes.bool,
+  name: React.PropTypes.string,
+  value: React.PropTypes.string,
+  onChange: React.PropTypes.func,
+  mode: React.PropTypes.string,
+  showGutter: React.PropTypes.bool
+};
 
 export default Editor;

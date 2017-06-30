@@ -55,6 +55,7 @@
     "brace": "^0.10.0",
     "bugsnag-js": "^3.2.0",
     "classnames": "^2.2.5",
+    "ethereumjs-util": "^5.1.2",
     "flexboxgrid": "^6.3.1",
     "immutability-helper": "^2.1.2",
     "kbpgp": "^2.0.72",
