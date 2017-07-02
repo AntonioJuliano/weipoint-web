@@ -4,6 +4,31 @@ import bluebird from 'bluebird';
 bluebird.promisifyAll(kbpgp);
 bluebird.promisifyAll(kbpgp.KeyManager);
 
+async function getPublicKey(username) {
+  const pubKeyResponse = await fetch('https://keybase.io/' + username + '/pgp_keys.asc');
+
+  if (pubKeyResponse.status !== 200) {
+    return {
+      ok: false,
+      message: `Cannot find Keybase user. Please check your username and make sure your
+                account has a linked public key.`
+    };
+  }
+  const pubKey = await pubKeyResponse.text();
+  if (pubKey === 'SELF-SIGNED PUBLIC KEY NOT FOUND') {
+    return {
+      ok: false,
+      message: `Your account does not have a public key. Add one by clicking "add a PGP key"
+      on your Keybase account page`
+    }
+  }
+
+  return {
+    ok: true,
+    key: pubKey
+  }
+}
+
 async function verifySignature(signature, username, expectedMessage) {
   // TODO what if user has more than one key
   // TODO cache this request
@@ -57,3 +82,4 @@ async function verifySignature(signature, username, expectedMessage) {
 }
 
 module.exports.verifySignature = verifySignature;
+module.exports.getPublicKey = getPublicKey;
