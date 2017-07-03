@@ -17,33 +17,41 @@ class Editor extends React.Component {
   render() {
     const width = this.state.width;
     const height = this.state.height;
+    console.log(this.state)
 
     return (
       <Measure
-        onMeasure={(dimensions) => {
-          this.setState(
-            {width: dimensions.width, height: dimensions.height, set: this.state.set + 1}
-          );
+        bounds={true}
+        onResize={(contentRect) => {
+          this.setState({
+            height: contentRect.bounds.height,
+            width: contentRect.bounds.width,
+            set: this.state.set + 1
+          });
         }}
       >
-        <div style={{ width:'100%', height: '100%', maxHeight: 'inherit' }}>
-          {this.state.set >= 1 && <AceEditor
-            width={width + 'px'}
-            height={height + 'px'}
-            mode={this.props.mode || 'javascript'}
-            theme='tomorrow'
-            showGutter={this.props.showGutter}
-            readOnly={this.props.readOnly}
-            name={this.props.name}
-            value={this.props.value}
-            onChange={this.props.onChange}
-            editorProps={{$blockScrolling: true}}
-            setOptions={{
-              hScrollBarAlwaysVisible: false,
-              vScrollBarAlwaysVisible: false
-            }}
-          />}
-        </div>
+        { ({ measureRef, contentRect }) => {
+          return (
+            <div style={{ width:'100%', height: '100%', maxHeight: 'inherit' }} ref={measureRef} >
+              {this.state.set >= 1 && <AceEditor
+                width={width + 'px'}
+                height={height + 'px'}
+                mode={this.props.mode || 'javascript'}
+                theme='tomorrow'
+                showGutter={this.props.showGutter}
+                readOnly={this.props.readOnly}
+                name={this.props.name}
+                value={this.props.value}
+                onChange={this.props.onChange}
+                editorProps={{$blockScrolling: true}}
+                setOptions={{
+                  hScrollBarAlwaysVisible: false,
+                  vScrollBarAlwaysVisible: false
+                }}
+              />}
+            </div>
+          );
+        }}
       </Measure>
     );
   }
