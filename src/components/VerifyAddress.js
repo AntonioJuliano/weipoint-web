@@ -11,16 +11,22 @@ import Editor from './Editor';
 import TextField from 'material-ui/TextField';
 import { verifySignature, getPublicKey } from '../helpers/Keybase';
 import CircularProgress from 'material-ui/CircularProgress';
-import CheckCircleIcon from 'react-material-icons/icons/action/check-circle';
 import CancelIcon from 'react-material-icons/icons/navigation/cancel';
-import { green500, red600 } from 'material-ui/styles/colors';
+import { red600 } from 'material-ui/styles/colors';
 import bluebird from 'bluebird';
 import ethUtil from 'ethereumjs-util';
 import CopyButton from './CopyButton';
+import Forward from 'material-ui/svg-icons/content/forward';
+import SwapHoriz from 'material-ui/svg-icons/action/swap-horiz';
+import FlatButton from 'material-ui/FlatButton';
+import KeybaseBadge from './KeybaseBadge';
+import EthereumBadge from './EthereumBadge';
+import { Link } from 'react-router-dom';
 
 const FORM_STATES = {
   OVERVIEW: 1,
-  FORM: 2
+  FORM: 2,
+  CONFIRMATION: 3
 }
 
 const VERIFICATION_STATES = {
@@ -36,7 +42,7 @@ class VerifyAddress extends React.Component {
 
     this.state = {
       formState: FORM_STATES.OVERVIEW,
-      stepIndex: 2,
+      stepIndex: 0,
       visited: [],
       keybaseUsername: '',
       keybaseUsernameVerificationState: VERIFICATION_STATES.NOT_VERIFYING,
@@ -124,7 +130,8 @@ class VerifyAddress extends React.Component {
     if (!this.props.web3.isConnected()) {
       this.setState({
         walletVerificationState: VERIFICATION_STATES.FAILED,
-        walletSignatureError: 'No Ethereum wallet detected. '
+        walletSignatureError: `No Ethereum wallet detected. Please visit this page with your web3
+        enabled wallet such as MetaMask or Mist in which you store this address.`
       });
     }
 
@@ -139,16 +146,16 @@ class VerifyAddress extends React.Component {
         from: this.props.address,
       });
 
-      console.log(result);
-
       if (result.error) {
         this.setState({ walletVerificationState: VERIFICATION_STATES.FAILED });
+      } else {
+        const signature = result.result;
+        this.setState({
+          walletVerificationState: VERIFICATION_STATES.VERIFIED,
+          walletSignature: signature
+        });
+        setTimeout(() => this.setState({ formState: FORM_STATES.CONFIRMATION }), 2000);
       }
-      const signature = result.result;
-      this.setState({
-        walletVerificationState: VERIFICATION_STATES.VERIFIED,
-        walletSignature: signature
-      });
     } catch(e) {
       console.error(e);
       this.setState({ walletVerificationState: VERIFICATION_STATES.FAILED });
@@ -181,38 +188,65 @@ class VerifyAddress extends React.Component {
         return this.getOverviewContent();
       case FORM_STATES.FORM:
         return this.getFormContent();
+      case FORM_STATES.CONFIRMATION:
+        return this.getConfirmationContent();
       default:
         return null;
     }
   }
 
   getOverviewContent() {
-    const overviewMessage = `Verify you are the owner of this address by linking it with a Keybase
-    account. Keybase accounts can then be linked with Github, Facebook, and other common internet
-    accounts. We use cryptographic signatures, so anyone can provably verify your keybase account
-    owns this address. We will create a message which you will need to sign with both your Keybase
-    account and your Ethereum wallet. If you create any contracts using this address Weipoint will
-    automatically display your Keybase account on those contracts,
-    making it easy for users to trust its authenticity.`;
-
     return (
       <div style={{ width: '100%' }}>
-        <Row style={{ fontSize: 20, textAlign: 'center', marginTop: 25 }} center='xs'>
+        <Row center='xs'>
+          <div>
+            <img src='/images/AddressLink.png' role='presentation' width={300} />
+          </div>
+        </Row>
+        <Row style={{ fontSize: 20, textAlign: 'center' }} center='xs'>
           <Col xs={10}>
-            {'Verify Ownership'}
+            {'Verify Address Ownership'}
           </Col>
         </Row>
         <Row
           style={{
-            fontSize: 16,
             textAlign: 'left',
-            marginTop: 32,
-            lineHeight: 1.3
+            marginTop: 18
           }}
           center='xs'
         >
           <Col xs={10}>
-            {overviewMessage}
+            <p>
+              Publicly verify you are the owner of this address by linking it with
+              a <a href='https://www.keybase.io' target='_blank'>Keybase</a> account
+            </p>
+          </Col>
+        </Row>
+        <Row
+          style={{
+            textAlign: 'left',
+            lineSpacing: 1.3
+          }}
+          center='xs'
+        >
+          <Col xs={10}>
+            <ul>
+              <li style={{ marginBottom: 18 }} >
+                Weipoint creates a message which you will cryptographically sign with both your
+                Keybase account and your Ethereum wallet. This means anyone can provably verify
+                your keybase account owns this address
+              </li>
+              <li style={{ marginBottom: 18 }} >
+                Keybase accounts can be linked with Github, Facebook, Reddit and other common
+                internet accounts. If you link internet accounts to your Keybase, your Ethereum
+                address will be discoverable by your username on those sites.
+              </li>
+              <li>
+                If you create any contracts using this address Weipoint will
+                automatically display your Keybase account on those contracts,
+                making it easy for users to trust its authenticity
+              </li>
+            </ul>
           </Col>
         </Row>
         <Row style={{ marginTop: 32 }} center='xs'>
@@ -228,12 +262,94 @@ class VerifyAddress extends React.Component {
     );
   }
 
+  getConfirmationContent() {
+    const shortAddress = this.props.address.substring(0,10) + '...';
+    const weipointKeybaseAddress = 'www.weipoint.com/service/keybase/' + this.state.keybaseUsername;
+
+    return (
+      <div style={{ width: '100%' }}>
+        <Row center='xs' style={{ marginTop: 20, marginBottom: 35 }}>
+          <div style={{ display: 'flex' }}>
+            <div>
+              <KeybaseBadge username={this.state.keybaseUsername} />
+            </div>
+            <div style={{ marginLeft: 6, marginRight: 6, marginTop: 'auto', marginBottom: 'auto' }}>
+              <SwapHoriz color='#4c4c4c'/>
+            </div>
+            <div>
+              <EthereumBadge address={shortAddress} />
+            </div>
+          </div>
+        </Row>
+        <Row style={{ fontSize: 20, textAlign: 'center' }} center='xs'>
+          <Col xs={10}>
+            {'Address Verified'}
+          </Col>
+        </Row>
+        <Row
+          style={{
+            textAlign: 'left',
+            marginTop: 18
+          }}
+          center='xs'
+        >
+          <Col xs={10}>
+            <p>
+              Congratulations, you have successfully verified your address!
+              You are now discoverable at:
+            </p>
+          </Col>
+        </Row>
+        <Row
+          style={{
+            textAlign: 'left',
+          }}
+          center='xs'
+        >
+          <Col xs={10}>
+            <ul>
+              <li>
+                <Link
+                  to={'/service/keybase/' + this.state.keybaseUsername}
+                  style={{ textDecoration: 'none' }}
+                >
+                  {weipointKeybaseAddress}
+                </Link>
+              </li>
+            </ul>
+          </Col>
+        </Row>
+        <Row
+          style={{
+            textAlign: 'left'
+          }}
+          center='xs'
+        >
+          <Col xs={10}>
+            <p>
+              As well as by searching for {this.state.keybaseUsername} through the main search bar.
+              If you create/have created any contracts with your address they will
+              also be discoverable by your username.
+            </p>
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+
   getFormContent() {
+    // TODO make this look decent on small screens
     return (
       <div>
         <Row center='xs'>
-          <Col xs={8} md={6}>
-            <Stepper linear={false} activeStep={this.state.stepIndex} style={{ height: 60 }}>
+          <div style={{ width: 500, marginLeft: 'auto', marginRight: 'auto' }}>
+            <Stepper
+              linear={false}
+              activeStep={this.state.stepIndex}
+              style={{
+                height: 60
+              }}
+            >
               <Step
                 completed={this.state.visited.indexOf(0) !== -1 && this.state.stepIndex !== 0}
                 active={this.state.stepIndex === 0}
@@ -266,7 +382,7 @@ class VerifyAddress extends React.Component {
                 </StepButton>
               </Step>
             </Stepper>
-          </Col>
+          </div>
         </Row>
         <div>
           <Row center='xs'>
@@ -304,12 +420,26 @@ class VerifyAddress extends React.Component {
           </p>
         </Row>
         <Row center='xs'>
-          <div style={{ display: 'flex' }}>
-            <a href='https://keybase.io' target='_blank' style={{ display: 'flex' }}>
-              <img src='/images/keybaseLogo.png' width={40} height={40} role='presentation' />
-              <div style={{ marginTop: 'auto', marginBottom: 'auto', marginLeft: 10 }}>
-                keybase.io
-              </div>
+          <div style={{ marginTop: 8, marginBottom: 8}}>
+            <a
+              href='https://keybase.io'
+              target='_blank'
+              style={{
+                textDecoration: 'none'
+              }}
+            >
+              <FlatButton
+                label='keybase.io'
+                labelPosition='after'
+                icon={
+                  <img
+                    src='/images/keybaseLogo.png'
+                    width={28}
+                    height={28}
+                    role='presentation'
+                  />
+                }
+              />
             </a>
           </div>
         </Row>
@@ -337,6 +467,14 @@ class VerifyAddress extends React.Component {
               keybaseUsernameVerificationState: VERIFICATION_STATES.NOT_VERIFYING
             })}
             errorText={ this.validateKeybaseUsername() }
+            onKeyPress={ event => {
+              if (event.charCode === 13) {
+                event.preventDefault();
+                if (this.validateKeybaseUsername() === '' && this.state.keybaseUsername !== '') {
+                  this.verifyKeybaseUsername(this.state.keybaseUsername);
+                }
+              }
+            }}
           />
         </Row>
         <Row center='xs' style={{ marginTop: 30 }}>
@@ -361,7 +499,15 @@ class VerifyAddress extends React.Component {
         );
       case VERIFICATION_STATES.FAILED:
         return (
-          <div style={{ marginTop: 10 }}>
+          <div>
+            <Row center='xs'>
+              <RaisedButton
+                label='Next'
+                primary={true}
+                onTouchTap={ () => this.verifyKeybaseUsername(this.state.keybaseUsername) }
+                disabled={this.state.keybaseUsername === '' || this.validateKeybaseUsername() !== ''}
+              />
+            </Row>
             <Row center='xs'>
               <Col xs={4}>
                 <div
@@ -371,7 +517,7 @@ class VerifyAddress extends React.Component {
                     marginLeft: 'auto'
                   }}
                   >
-                  <CancelIcon style={{ width: 72, height: 72 }} color={red600} />
+                  <CancelIcon style={{ width: 60, height: 60 }} color={red600} />
                 </div>
               </Col>
             </Row>
@@ -380,20 +526,12 @@ class VerifyAddress extends React.Component {
                 {this.state.keybaseUsernameError}
               </p>
             </Row>
-            <Row center='xs'>
-              <RaisedButton
-                label='Next'
-                primary={true}
-                onTouchTap={ () => this.verifyKeybaseUsername(this.state.keybaseUsername) }
-                disabled={this.state.keybaseUsername === '' || this.validateKeybaseUsername() !== ''}
-              />
-            </Row>
           </div>
         );
       case VERIFICATION_STATES.VERIFIED:
         return this.getVerified();
       case VERIFICATION_STATES.VERIFYING:
-        return this.getVerifying();
+        return null;
       default:
         return null;
     }
@@ -433,21 +571,46 @@ class VerifyAddress extends React.Component {
           </Row>
           <Row center='xs'>
             <div style={{ display: 'flex', marginBottom: 20 }}>
-              <div style={{ marginRight: 35, marginTop: 'auto', marginBottom: 'auto' }}>
+              <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
                 <CopyButton
                   label='Copy Message'
                   copyValue={this.getMessageToSign()}
                 />
               </div>
+              <div
+                style={{
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                  marginRight: 12,
+                  marginLeft: 12,
+                  lineSpacing: 1,
+                  width: 24,
+                  height: 24
+                }}
+              >
+                <Forward style={{ width: 24, heigh: 24 }}/>
+              </div>
               <a
                 href='https://keybase.io/sign'
                 target='_blank'
-                style={{ display: 'flex', marginTop: 'auto', marginBottom: 'auto' }}
+                style={{
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                  textDecoration: 'none'
+                }}
               >
-                <img src='/images/keybaseLogo.png' width={40} height={40} role='presentation' />
-                <div style={{ marginTop: 'auto', marginBottom: 'auto', marginLeft: 10 }}>
-                  keybase.io/sign
-                </div>
+                <FlatButton
+                  label='keybase.io/sign'
+                  labelPosition='after'
+                  icon={
+                    <img
+                      src='/images/keybaseLogo.png'
+                      width={28}
+                      height={28}
+                      role='presentation'
+                    />
+                  }
+                />
               </a>
             </div>
           </Row>
@@ -492,7 +655,7 @@ class VerifyAddress extends React.Component {
       case VERIFICATION_STATES.NOT_VERIFYING:
         return null;
       case VERIFICATION_STATES.VERIFYING:
-        return this.getVerifying();
+        return null;
       case VERIFICATION_STATES.VERIFIED:
         return this.getVerified();
       case VERIFICATION_STATES.FAILED:
@@ -507,7 +670,7 @@ class VerifyAddress extends React.Component {
                     marginLeft: 'auto'
                   }}
                   >
-                  <CancelIcon style={{ width: 72, height: 72 }} color={red600} />
+                  <CancelIcon style={{ width: 60, height: 60 }} color={red600} />
                 </div>
               </Col>
             </Row>
@@ -531,18 +694,12 @@ class VerifyAddress extends React.Component {
         <Row center='xs' style={{ textAlign: 'left' }}>
           <p>
             The final step is to sign the message with your Ethereum address.
-            Click the button below to sign
+            Click the button below to sign with your wallet.
           </p>
         </Row>
         <Row center='xs' style={{ marginTop: 25 }}>
           <Col xs={10}>
-            <div style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-              <RaisedButton
-                label='Sign with Wallet'
-                primary={true}
-                onTouchTap={this.requestWalletSignature}
-              />
-            </div>
+            {this.getWalletVerificationResult()}
           </Col>
         </Row>
       </div>
@@ -552,10 +709,25 @@ class VerifyAddress extends React.Component {
   getWalletVerificationResult() {
     switch (this.state.walletVerificationState) {
       case VERIFICATION_STATES.NOT_VERIFYING:
-        return null;
+        return (
+          <div>
+            <RaisedButton
+              label='Sign with Wallet'
+              primary={true}
+              onTouchTap={this.requestWalletSignature}
+            />
+          </div>
+        );
       case VERIFICATION_STATES.FAILED:
         return (
-          <div style={{ marginTop: 10 }}>
+          <div>
+            <div>
+              <RaisedButton
+                label='Sign with Wallet'
+                primary={true}
+                onTouchTap={this.requestWalletSignature}
+              />
+            </div>
             <Row center='xs'>
               <Col xs={4}>
                 <div
@@ -565,7 +737,7 @@ class VerifyAddress extends React.Component {
                     marginLeft: 'auto'
                   }}
                   >
-                  <CancelIcon style={{ width: 72, height: 72 }} color={red600} />
+                  <CancelIcon style={{ width: 60, height: 60 }} color={red600} />
                 </div>
               </Col>
             </Row>
@@ -577,23 +749,7 @@ class VerifyAddress extends React.Component {
           </div>
         );
       case VERIFICATION_STATES.VERIFIED:
-        return (
-          <div style={{ marginTop: 10 }}>
-            <Row center='xs'>
-              <Col xs={4}>
-                <div
-                  style={{
-                    marginTop: 10,
-                    marginRight: 'auto',
-                    marginLeft: 'auto'
-                  }}
-                  >
-                  <CheckCircleIcon style={{ width: 72, height: 72 }} color={green500} />
-                </div>
-              </Col>
-            </Row>
-          </div>
-        );
+        return this.getVerified();
       default:
         return null;
     }

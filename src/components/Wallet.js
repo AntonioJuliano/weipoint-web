@@ -15,7 +15,7 @@ class Wallet extends React.Component {
             <SearchStatus
               icon={<a href='https://metamask.io/' target='_blank'>
                   <img
-                    src={'metamask.png'}
+                    src={'/metamask.png'}
                     alt='Download MetaMask'
                     width={200}
                   >
