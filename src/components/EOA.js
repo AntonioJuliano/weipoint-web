@@ -1,9 +1,10 @@
 import React from "react";
 import {Card, CardTitle} from 'material-ui/Card';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Route, Switch } from 'react-router-dom';
 import { Row, Col } from 'react-flexbox-grid';
 import Divider from 'material-ui/Divider';
 import TokenBalances from './TokenBalances';
+import VerifyAddress from './VerifyAddress';
 
 const MIN_CONTENT_HEIGHT = 250;
 
@@ -17,6 +18,9 @@ class EOA extends React.Component {
     this.state = {
       height: 0
     };
+
+    this.getBodyContent = this.getBodyContent.bind(this);
+    this.getDefaultContent = this.getDefaultContent.bind(this);
   }
 
   updateDimensions() {
@@ -49,7 +53,27 @@ class EOA extends React.Component {
     );
   }
 
-  render() {
+  getBodyContent() {
+    return (
+      <div>
+        <Switch>
+          <Route
+            path='*/verify'
+            render={() => <VerifyAddress
+              address={this.props.address}
+              web3={this.props.web3}
+              />
+            }
+          />
+          <Route
+            render={() => this.getDefaultContent()}
+          />
+        </Switch>
+      </div>
+    );
+  }
+
+  getDefaultContent() {
     const headerStyle = {
       marginTop: 10,
       fontSize: 18,
@@ -57,6 +81,44 @@ class EOA extends React.Component {
       marginBottom: 10,
       marginLeft: -10
     };
+    const isUserAccount = this.props.address === this.props.userAccount;
+
+    return (
+      <div>
+        <Row style={{ marginTop: 10, marginBottom: 20 }} center='xs'>
+          <Col xs={10} style={{ textAlign: 'left' }}>
+            <div>
+              <div style={headerStyle}>
+                {'Info'}
+              </div>
+              <div style={{ marginTop: 15, marginLeft: 12 }}>
+                {this.getInfoElement(this.props.address)}
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Divider style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%'}}/>
+        <Row style={{ marginTop: 10, marginBottom: 10 }} center='xs'>
+          <Col xs={10} style={{ textAlign: 'left' }}>
+            <div>
+              <div style={headerStyle}>
+                {'Balances'}
+              </div>
+              <div style={{ marginTop: 15 }}>
+                <TokenBalances
+                  address={this.props.address}
+                  web3={this.props.web3}
+                  isUserAccount={isUserAccount}
+                />
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+
+  render() {
     const isUserAccount = this.props.address === this.props.userAccount;
 
     return (
@@ -79,35 +141,7 @@ class EOA extends React.Component {
             overflowY: 'auto',
             overflowX: 'hidden'
           }}>
-            <Row style={{ marginTop: 10, marginBottom: 20 }} center='xs'>
-              <Col xs={10} style={{ textAlign: 'left' }}>
-                <div>
-                  <div style={headerStyle}>
-                    {'Info'}
-                  </div>
-                  <div style={{ marginTop: 15, marginLeft: 12 }}>
-                    {this.getInfoElement(this.props.address)}
-                  </div>
-                </div>
-              </Col>
-            </Row>
-            <Divider style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%'}}/>
-            <Row style={{ marginTop: 10, marginBottom: 10 }} center='xs'>
-              <Col xs={10} style={{ textAlign: 'left' }}>
-                <div>
-                  <div style={headerStyle}>
-                    {'Balances'}
-                  </div>
-                  <div style={{ marginTop: 15 }}>
-                    <TokenBalances
-                      address={this.props.address}
-                      web3={this.props.web3}
-                      isUserAccount={isUserAccount}
-                    />
-                  </div>
-                </div>
-              </Col>
-            </Row>
+            {this.getBodyContent()}
           </div>
         </Card>
       </div>

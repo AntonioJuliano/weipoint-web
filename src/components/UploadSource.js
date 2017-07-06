@@ -19,30 +19,30 @@ import paths from '../lib/ApiPaths';
 
 class UploadSource extends React.Component {
     constructor(props) {
-        super(props);
-        this.state = {
-            value: '',
-            error: null,
-            code: "",
-            stepIndex: 0,
-            versionIndex: null,
-            visited: [],
-            compilerVersions: [],
-            optimized: true,
-            uploadState: this.props.uploadState
-        };
-        this.loadCompilerVersions();
+      super(props);
+      this.state = {
+        value: '',
+        error: null,
+        code: "",
+        stepIndex: 0,
+        versionIndex: null,
+        visited: [],
+        compilerVersions: [],
+        optimized: true,
+        uploadState: this.props.uploadState
+      };
+      this.loadCompilerVersions();
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleCodeChanged = this.handleCodeChanged.bind(this);
-        this.handleVersionChanged = this.handleVersionChanged.bind(this);
-        this.componentWillMount = this.componentWillMount.bind(this);
-        this.componentWillUpdate = this.componentWillUpdate.bind(this);
-        this.handleNext = this.handleNext.bind(this);
-        this.handlePrev = this.handlePrev.bind(this);
-        this.handleOptimizedChanged = this.handleOptimizedChanged.bind(this);
-        this.uploadSource = this.uploadSource.bind(this);
-        this.getStepContent = this.getStepContent.bind(this);
+      this.handleChange = this.handleChange.bind(this);
+      this.handleCodeChanged = this.handleCodeChanged.bind(this);
+      this.handleVersionChanged = this.handleVersionChanged.bind(this);
+      this.componentWillMount = this.componentWillMount.bind(this);
+      this.componentWillUpdate = this.componentWillUpdate.bind(this);
+      this.handleNext = this.handleNext.bind(this);
+      this.handlePrev = this.handlePrev.bind(this);
+      this.handleOptimizedChanged = this.handleOptimizedChanged.bind(this);
+      this.uploadSource = this.uploadSource.bind(this);
+      this.getStepContent = this.getStepContent.bind(this);
     }
 
     async loadCompilerVersions() {

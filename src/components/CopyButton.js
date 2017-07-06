@@ -1,6 +1,7 @@
 import React from "react";
 import CopyToClipboard from 'react-copy-to-clipboard';
 import FlatButton from 'material-ui/FlatButton';
+import ContentCopy from 'material-ui/svg-icons/content/content-copy';
 
 class CopyButton extends React.Component {
   constructor(props) {
@@ -27,7 +28,10 @@ class CopyButton extends React.Component {
     return (<CopyToClipboard text={this.props.copyValue}>
         <FlatButton
           label={this.state.bytecodeButtonText}
-          onClick={this.copyBytecodeClicked} />
+          onClick={this.copyBytecodeClicked}
+          labelPosition='after'
+          icon={<ContentCopy />}
+        />
       </CopyToClipboard>
     );
   }
