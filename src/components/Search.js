@@ -11,6 +11,7 @@ import terms from '../assets/docs/terms';
 import privacy from '../assets/docs/privacy';
 import About from './About';
 import Wallet from './Wallet';
+import Services from './Services';
 import { isEnsDomain } from '../lib/services/ensService';
 
 class Search extends React.Component {
@@ -80,6 +81,14 @@ class Search extends React.Component {
             path='/wallet'
             render={() => <Wallet
               isLoaded={this.props.isLoaded}
+              userAddress={this.state.userAccount}
+              contractStore={this.state.contractStore}
+              web3={this.props.web3}
+            />}
+          />
+          <Route
+            path='/service/:type/:userID'
+            render={() => <Services
               userAddress={this.state.userAccount}
               contractStore={this.state.contractStore}
               web3={this.props.web3}

@@ -30,21 +30,30 @@ class FetchAddress extends React.Component {
     this.search = this.search.bind(this);
     this.getBodyElement = this.getBodyElement.bind(this);
 
-    if (props.contractStore[this.getAddress(props)]) {
+
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+    if (this.props.contractStore[this.getAddress(this.props)]) {
       this.state = {
-        contract: props.contractStore[this.getAddress(props)],
+        contract: this.props.contractStore[this.getAddress(this.props)],
         searchState: SEARCH_STATES.CONTRACT
       };
     } else {
-      if (!props.web3.isAddress(this.getAddress(props))) {
+      if (!this.props.web3.isAddress(this.getAddress(this.props))) {
         this.state = {
           searchState: SEARCH_STATES.INVALID,
           contract: null
         };
       } else {
-        this.search(props);
+        this.search(this.props);
       }
     }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   getAddress(props) {
@@ -84,21 +93,29 @@ class FetchAddress extends React.Component {
     try {
       const response = await fetch(requestPath, { method: 'get' });
       if (response.status === 400) {
-        this.setState({ searchState: SEARCH_STATES.EOA });
+        if (this.mounted) {
+          this.setState({ searchState: SEARCH_STATES.EOA });
+        }
         return;
       }
       if (response.status !== 200) {
-        this.setState({ searchState: SEARCH_STATES.ERROR });
+        if (this.mounted) {
+          this.setState({ searchState: SEARCH_STATES.ERROR });
+        }
         return;
       }
       const json = await response.json();
       this.props.contractStore[address] = json.contract;
-      this.setState({
-        contract: json.contract,
-        searchState: SEARCH_STATES.CONTRACT
-      });
+      if (this.mounted) {
+        this.setState({
+          contract: json.contract,
+          searchState: SEARCH_STATES.CONTRACT
+        });
+      }
     } catch (e) {
-      this.setState({ searchState: SEARCH_STATES.ERROR });
+      if (this.mounted) {
+        this.setState({ searchState: SEARCH_STATES.ERROR });
+      }
     }
   }
 

@@ -196,7 +196,7 @@ class TokenBalance extends React.Component {
     const imgName = balance.isEth ? 'eth' : balance.contractAddress;
     const img = (
       <img
-        src={'tokens/' + imgName + '.png'}
+        src={'/tokens/' + imgName + '.png'}
         style={imgStyle}
         onError={ () => thisRef.setState({ showIcon: false })}
         alt=''

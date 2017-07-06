@@ -48,7 +48,6 @@ UsernameBadge.propTypes = {
   backgroundColor: React.PropTypes.string.isRequired,
   textColor: React.PropTypes.string.isRequired,
   image: React.PropTypes.string.isRequired,
-  link: React.PropTypes.string
 }
 
 export default UsernameBadge;

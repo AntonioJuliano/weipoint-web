@@ -5,6 +5,7 @@ import { Row, Col } from 'react-flexbox-grid';
 import Divider from 'material-ui/Divider';
 import TokenBalances from './TokenBalances';
 import VerifyAddress from './VerifyAddress';
+import Verifications from './Verifications';
 
 const MIN_CONTENT_HEIGHT = 250;
 
@@ -89,10 +90,13 @@ class EOA extends React.Component {
           <Col xs={10} style={{ textAlign: 'left' }}>
             <div>
               <div style={headerStyle}>
-                {'Info'}
+                {'Verifications'}
               </div>
               <div style={{ marginTop: 15, marginLeft: 12 }}>
-                {this.getInfoElement(this.props.address)}
+                <Verifications
+                  type='ethereum_address'
+                  userID={this.props.address}
+                />
               </div>
             </div>
           </Col>
@@ -110,6 +114,19 @@ class EOA extends React.Component {
                   web3={this.props.web3}
                   isUserAccount={isUserAccount}
                 />
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Divider style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%'}}/>
+        <Row style={{ marginTop: 10, marginBottom: 20 }} center='xs'>
+          <Col xs={10} style={{ textAlign: 'left' }}>
+            <div>
+              <div style={headerStyle}>
+                {'Info'}
+              </div>
+              <div style={{ marginTop: 15, marginLeft: 12 }}>
+                {this.getInfoElement(this.props.address)}
               </div>
             </div>
           </Col>
