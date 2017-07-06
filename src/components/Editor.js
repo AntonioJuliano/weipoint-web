@@ -17,7 +17,6 @@ class Editor extends React.Component {
   render() {
     const width = this.state.width;
     const height = this.state.height;
-    console.log(this.state)
 
     return (
       <Measure

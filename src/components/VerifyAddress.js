@@ -22,6 +22,9 @@ import FlatButton from 'material-ui/FlatButton';
 import KeybaseBadge from './KeybaseBadge';
 import EthereumBadge from './EthereumBadge';
 import { Link } from 'react-router-dom';
+import paths from '../lib/ApiPaths';
+import Dialog from 'material-ui/Dialog';
+import JSONPretty from 'react-json-pretty';
 
 const FORM_STATES = {
   OVERVIEW: 1,
@@ -53,6 +56,9 @@ class VerifyAddress extends React.Component {
       walletSignatureError: '',
       walletVerificationState: VERIFICATION_STATES.NOT_VERIFYING,
       walletSignature: '',
+      sendToServerState: 0,
+      timestamp: new Date().getTime(),
+      showProof: false
     };
 
     this.verifyKeybaseSignature = this.verifyKeybaseSignature.bind(this);
@@ -64,6 +70,8 @@ class VerifyAddress extends React.Component {
     this.requestWalletSignature = this.requestWalletSignature.bind(this);
     this.verifyKeybaseUsername = this.verifyKeybaseUsername.bind(this);
     this.validateKeybaseUsername = this.validateKeybaseUsername.bind(this);
+    this.sendVerificationToServer = this.sendVerificationToServer.bind(this);
+    this.getServerRequest = this.getServerRequest.bind(this);
   }
 
   async verifyKeybaseUsername(username) {
@@ -152,8 +160,10 @@ class VerifyAddress extends React.Component {
         const signature = result.result;
         this.setState({
           walletVerificationState: VERIFICATION_STATES.VERIFIED,
-          walletSignature: signature
+          walletSignature: signature,
+          sendToServerState: 1
         });
+        this.sendVerificationToServer();
         setTimeout(() => this.setState({ formState: FORM_STATES.CONFIRMATION }), 2000);
       }
     } catch(e) {
@@ -163,13 +173,24 @@ class VerifyAddress extends React.Component {
   }
 
   getMessageToSign() {
-    let message = '';
-    const messageHeader = 'Weipoint address verification [Ethereum/Keybase]: ';
-    message += messageHeader;
-    message += this.props.address;
-    message += ' - ';
-    message += this.state.keybaseUsername;
-    return message;
+    const jsonMessage = {
+      verifier: 'weipoint',
+      type: 'link',
+      services: [
+        {
+          type: 'keybase',
+          userID: this.state.keybaseUsername
+        },
+        {
+          type: 'ethereum_address',
+          userID: this.props.address
+        }
+      ],
+      version: 1,
+      timestamp: this.state.timestamp
+    };
+
+    return JSON.stringify(jsonMessage);
   }
 
   validateKeybaseUsername() {
@@ -178,6 +199,53 @@ class VerifyAddress extends React.Component {
     }
 
     return '';
+  }
+
+  async sendVerificationToServer() {
+    const request = this.getServerRequest();
+
+    try {
+      const response = await fetch(
+        paths.verification.add,
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(request)
+        }
+      );
+
+      if (response.status !== 200) {
+        throw Error("Request to server failed");
+      }
+
+      this.setState({ sendToServerState: 2 });
+    } catch(e) {
+      this.setState({ sendToServerState: 3 });
+      console.error(e);
+    }
+  }
+
+  // this is also displayed in the proof dialog
+  getServerRequest() {
+    return {
+      version: 1,
+      timestamp: this.state.timestamp,
+      services: [
+        {
+          type: 'keybase',
+          userID: this.state.keybaseUsername,
+          proof: this.state.keybaseSignature
+        },
+        {
+          type: 'ethereum_address',
+          userID: this.props.address,
+          proof: this.state.walletSignature
+        }
+      ]
+    };
   }
 
   // ------ Presentational Functions ------
@@ -266,75 +334,130 @@ class VerifyAddress extends React.Component {
     const shortAddress = this.props.address.substring(0,10) + '...';
     const weipointKeybaseAddress = 'www.weipoint.com/service/keybase/' + this.state.keybaseUsername;
 
-    return (
-      <div style={{ width: '100%' }}>
-        <Row center='xs' style={{ marginTop: 20, marginBottom: 35 }}>
-          <div style={{ display: 'flex' }}>
-            <div>
-              <KeybaseBadge username={this.state.keybaseUsername} />
-            </div>
-            <div style={{ marginLeft: 6, marginRight: 6, marginTop: 'auto', marginBottom: 'auto' }}>
-              <SwapHoriz color='#4c4c4c'/>
-            </div>
-            <div>
-              <EthereumBadge address={shortAddress} />
-            </div>
+    switch (this.state.sendToServerState) {
+      case 0:
+        console.error('Got to confirmation without sending to server');
+        return null;
+      case 1:
+        return (
+          <div style={{ marginTop: 150 }}>
+            <Row center='xs'>
+              {this.getVerifying()}
+            </Row>
           </div>
-        </Row>
-        <Row style={{ fontSize: 20, textAlign: 'center' }} center='xs'>
-          <Col xs={10}>
-            {'Address Verified'}
-          </Col>
-        </Row>
-        <Row
-          style={{
-            textAlign: 'left',
-            marginTop: 18
-          }}
-          center='xs'
-        >
-          <Col xs={10}>
-            <p>
-              Congratulations, you have successfully verified your address!
-              You are now discoverable at:
-            </p>
-          </Col>
-        </Row>
-        <Row
-          style={{
-            textAlign: 'left',
-          }}
-          center='xs'
-        >
-          <Col xs={10}>
-            <ul>
-              <li>
-                <Link
-                  to={'/service/keybase/' + this.state.keybaseUsername}
-                  style={{ textDecoration: 'none' }}
+        );
+      case 2:
+        return (
+          <div style={{ width: '100%' }}>
+            <Row center='xs' style={{ marginTop: 20, marginBottom: 35 }}>
+              <div style={{ display: 'flex' }}>
+                <div>
+                  <KeybaseBadge username={this.state.keybaseUsername} />
+                </div>
+                <div
+                  style={{ marginLeft: 6, marginRight: 6, marginTop: 'auto', marginBottom: 'auto' }}
                 >
-                  {weipointKeybaseAddress}
-                </Link>
-              </li>
-            </ul>
-          </Col>
-        </Row>
-        <Row
-          style={{
-            textAlign: 'left'
-          }}
-          center='xs'
-        >
-          <Col xs={10}>
-            <p>
-              As well as by searching for {this.state.keybaseUsername} through the main search bar.
-              If you create/have created any contracts with your address they will
-              also be discoverable by your username.
-            </p>
-          </Col>
-        </Row>
-      </div>
-    );
+                  <SwapHoriz color='#4c4c4c'/>
+                </div>
+                <div>
+                  <EthereumBadge address={shortAddress} />
+                </div>
+              </div>
+            </Row>
+            <Row style={{ fontSize: 20, textAlign: 'center' }} center='xs'>
+              <Col xs={10}>
+                {'Address Verified'}
+              </Col>
+            </Row>
+            <Row
+              style={{
+                textAlign: 'left',
+                marginTop: 18
+              }}
+              center='xs'
+            >
+              <Col xs={10} lg={9}>
+                <p>
+                  Congratulations, you have successfully verified your address!
+                  You are now discoverable at:
+                </p>
+              </Col>
+            </Row>
+            <Row
+              style={{
+                textAlign: 'left',
+              }}
+              center='xs'
+            >
+              <Col xs={10} lg={9}>
+                <ul>
+                  <li>
+                    <Link
+                      to={'/service/keybase/' + this.state.keybaseUsername}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      {weipointKeybaseAddress}
+                    </Link>
+                  </li>
+                </ul>
+              </Col>
+            </Row>
+            <Row
+              style={{
+                textAlign: 'left'
+              }}
+              center='xs'
+            >
+              <Col xs={10} lg={9}>
+                <p>
+                  As well as by searching for {this.state.keybaseUsername} through the main search
+                  bar. If you create/have created any contracts with your address they will
+                  also be discoverable by your username.
+                </p>
+              </Col>
+            </Row>
+            <Row center='xs'>
+              <FlatButton
+                label='view your proof'
+                onClick={ () => this.setState({ showProof: true }) }
+              />
+            </Row>
+          </div>
+        );
+      case 3:
+        return (
+          <div>
+            <Row center='xs'>
+              <Col xs={4}>
+                <div
+                  style={{
+                    marginTop: 10,
+                    marginRight: 'auto',
+                    marginLeft: 'auto'
+                  }}
+                >
+                  <CancelIcon style={{ width: 60, height: 60 }} color={red600} />
+                </div>
+              </Col>
+            </Row>
+            <Row center='xs'>
+              <p>
+                {'Unable to save your verification. Click below to try again, or reload the form.'}
+              </p>
+            </Row>
+            <Row center='xs'>
+              <RaisedButton
+                label='Retry'
+                primary={true}
+                onTouchTap={this.sendVerificationToServer}
+              />
+            </Row>
+          </div>
+        );
+      default:
+        return null;
+    }
+
   }
 
   getFormContent() {
@@ -544,76 +667,76 @@ class VerifyAddress extends React.Component {
     return (
       <div>
         <Row center='xs' style={{ textAlign: 'left' }}>
-          <Row>
-            <p>
-              The next step is to sign a message declaring you own this address
-              with your Keybase account. Follow the steps below:
-            </p>
-          </Row>
-          <Row>
-            <ol>
-              <li style={{ marginBottom: listSpacing}}>
-                Click the button on the left to copy the message
-              </li>
-              <li style={{ marginBottom: listSpacing}}>
-                Click the link on the right to navigate to Keybase where you
-                can sign the message
-              </li>
-              <li style={{ marginBottom: listSpacing}}>
-                Paste the message into the keybase sign box, put in your Keybase password
-                and click sign
-              </li>
-              <li>
-                Copy the entire signature generated by Keybase and paste it into
-                the box below
-              </li>
-            </ol>
-          </Row>
-          <Row center='xs'>
-            <div style={{ display: 'flex', marginBottom: 20 }}>
-              <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-                <CopyButton
-                  label='Copy Message'
-                  copyValue={this.getMessageToSign()}
-                />
-              </div>
-              <div
-                style={{
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
-                  marginRight: 12,
-                  marginLeft: 12,
-                  lineSpacing: 1,
-                  width: 24,
-                  height: 24
-                }}
-              >
-                <Forward style={{ width: 24, heigh: 24 }}/>
-              </div>
-              <a
-                href='https://keybase.io/sign'
-                target='_blank'
-                style={{
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
-                  textDecoration: 'none'
-                }}
-              >
-                <FlatButton
-                  label='keybase.io/sign'
-                  labelPosition='after'
-                  icon={
-                    <img
-                      src='/images/keybaseLogo.png'
-                      width={28}
-                      height={28}
-                      role='presentation'
-                    />
-                  }
-                />
-              </a>
+          <p>
+            The next step is to sign a message declaring you own this address
+            with your Keybase account. Follow the steps below:
+          </p>
+        </Row>
+        <Row center='xs' style={{ textAlign: 'left' }}>
+          <ol>
+            <li style={{ marginBottom: listSpacing}}>
+              Click the button on the left to copy the message
+            </li>
+            <li style={{ marginBottom: listSpacing}}>
+              Click the link on the right to navigate to Keybase where you
+              can sign the message
+            </li>
+            <li style={{ marginBottom: listSpacing}}>
+              Paste the message into the keybase sign box, put in your Keybase password
+              and click sign
+            </li>
+            <li>
+              Copy the entire signature generated by Keybase and paste it into
+              the box below
+            </li>
+          </ol>
+        </Row>
+        <Row center='xs'>
+          <div style={{ display: 'flex', marginBottom: 20 }}>
+            <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+              <CopyButton
+                label='Copy Message'
+                copyValue={this.getMessageToSign()}
+              />
             </div>
-          </Row>
+            <div
+              style={{
+                marginTop: 'auto',
+                marginBottom: 'auto',
+                marginRight: 12,
+                marginLeft: 12,
+                lineSpacing: 1,
+                width: 24,
+                height: 24
+              }}
+            >
+              <Forward style={{ width: 24, heigh: 24 }}/>
+            </div>
+            <a
+              href='https://keybase.io/sign'
+              target='_blank'
+              style={{
+                marginTop: 'auto',
+                marginBottom: 'auto',
+                textDecoration: 'none'
+              }}
+            >
+              <FlatButton
+                label='keybase.io/sign'
+                labelPosition='after'
+                icon={
+                  <img
+                    src='/images/keybaseLogo.png'
+                    width={28}
+                    height={28}
+                    role='presentation'
+                  />
+                }
+              />
+            </a>
+          </div>
+        </Row>
+        <Row center='xs'>
           <Col xs={10}>
             <Paper style={{ width: '100%', height: 300, overflowY: 'auto' }} zDepth={2}>
               <Editor
@@ -801,6 +924,13 @@ class VerifyAddress extends React.Component {
     return (
       <div style={{ marginBottom: 20 }}>
         {this.getContent(this.state.formState)}
+        <Dialog
+          modal={false}
+          open={this.state.showProof}
+          onRequestClose={ () => this.setState({ showProof: false }) }
+        >
+          <JSONPretty id="verification-proof" json={this.getServerRequest()} />
+        </Dialog>
       </div>
     );
   }

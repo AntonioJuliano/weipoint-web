@@ -20,6 +20,9 @@ const paths = {
   },
   address: {
     tokenBalances: origin + '/api/v1/address/tokenBalances'
+  },
+  verification: {
+    add: origin + '/api/v1/verification'
   }
 }
 

@@ -90,6 +90,8 @@ module.exports = {
         include: paths.appSrc,
       }
     ],
+    exprContextRegExp: /$^/,
+    exprContextCritical: false,
     loaders: [
       // Default loader: load all assets that are not handled
       // by other loaders with the url loader.
