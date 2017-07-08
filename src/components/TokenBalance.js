@@ -228,7 +228,7 @@ class TokenBalance extends React.Component {
             <Col xs={3} sm={2} smOffset={1} style={{ width: 52, marginTop: 'auto', marginBottom: 'auto' }}>
               {symbolElement}
             </Col>
-            <Col xs={5} style={{
+            <Col xs={5} xsOffset={this.props.isUserAccount ? 0 : 2} style={{
               overflowX: 'auto',
               textAlign: 'right',
               fontFamily: 'Roboto Mono',

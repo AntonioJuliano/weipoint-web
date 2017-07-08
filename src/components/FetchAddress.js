@@ -29,8 +29,6 @@ class FetchAddress extends React.Component {
 
     this.search = this.search.bind(this);
     this.getBodyElement = this.getBodyElement.bind(this);
-
-
   }
 
   componentDidMount() {

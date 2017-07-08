@@ -26,8 +26,15 @@ class Services extends React.Component {
     this.state = initialState;
 
     this.search = this.search.bind(this);
+  }
 
-    this.search(props);
+  componentDidMount() {
+    this.mounted = true;
+    this.search(this.props);
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -37,34 +44,81 @@ class Services extends React.Component {
     }
   }
 
-  async search(props) {
+  async mapToKeybaseUser(props) {
     const type = props.match.params.type;
     const userID = props.match.params.userID;
-    const requestPath = paths.verification.get + `?type=${type}&userID=${userID}`;
 
+    if (type === 'keybase') {
+      return { type, userIDs: [userID] };
+    }
+
+    const keybasePath =
+      `https://keybase.io/_/api/1.0/user/lookup.json?${type}=${userID}`;
+    const keybaseResponse = await fetch(keybasePath, { method: 'get' });
+
+    if (keybaseResponse.status >= 400 && keybaseResponse.status < 500) {
+      return { type: null };
+    }
+
+    if (keybaseResponse.status !== 200) {
+      throw new Error('Keybase bad response');
+    }
+
+    const keybaseJson = await keybaseResponse.json();
+
+    if (keybaseJson.them.length === 0) {
+      return { type: null };
+    }
+
+    return { type: 'keybase', userIDs: keybaseJson.them.map( u => u.basics.username) }
+  }
+
+  async search(props) {
     try {
+      const { type, userIDs } = await this.mapToKeybaseUser(props);
+
+      if (!type) {
+        if (this.mounted) {
+          this.setState({
+            searchState: SEARCH_STATES.NOT_FOUND
+          });
+        }
+        return;
+      }
+
+      const userIDsQuery = userIDs.map( id => '&userIDs=' + id).join('');
+
+      const requestPath = paths.verification.get + `?type=${type}${userIDsQuery}`;
       const response = await fetch(requestPath, { method: 'get' });
 
       if (response.status !== 200) {
-        this.setState({ searchState: SEARCH_STATES.ERROR });
+        if (this.mounted) {
+          this.setState({ searchState: SEARCH_STATES.ERROR });
+        }
         return;
       }
       const json = await response.json();
 
       // TODO handle multiple matches. For now just take first
       if (json.length > 0) {
-        this.setState({
-          result: json[0],
-          searchState: SEARCH_STATES.COMPLETED
-        });
+        if (this.mounted) {
+          this.setState({
+            result: json[0],
+            searchState: SEARCH_STATES.COMPLETED
+          });
+        }
       } else {
-        this.setState({
-          searchState: SEARCH_STATES.NOT_FOUND
-        });
+        if (this.mounted) {
+          this.setState({
+            searchState: SEARCH_STATES.NOT_FOUND
+          });
+        }
       }
     } catch (e) {
       console.error(e);
-      this.setState({ searchState: SEARCH_STATES.ERROR });
+      if (this.mounted) {
+        this.setState({ searchState: SEARCH_STATES.ERROR });
+      }
     }
   }
 

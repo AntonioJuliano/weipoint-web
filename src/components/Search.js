@@ -135,7 +135,7 @@ class Search extends React.Component {
 
     const thisRef = this;
     web3.eth.getAccountsAsync().then( userAccounts => {
-      if (userAccounts) {
+      if (userAccounts && userAccounts.length > 0) {
         thisRef.setState({ userAccount: userAccounts[0] });
       } else {
         thisRef.setState({ userAccount: 'none' });

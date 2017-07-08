@@ -29,6 +29,20 @@ async function getPublicKey(username) {
   }
 }
 
+async function getUser(username) {
+  const requestPath = 'https://keybase.io/_/api/1.0/user/lookup.json?usernames=' + username;
+
+  const response = await fetch(requestPath);
+
+  if (response.status !== 200) {
+    throw new Error('Keybase bad response');
+  }
+
+  const json = await response.json();
+
+  return json.them[0];
+}
+
 async function verifySignature(signature, username, expectedMessage) {
   // TODO what if user has more than one key
   // TODO cache this request
@@ -83,3 +97,4 @@ async function verifySignature(signature, username, expectedMessage) {
 
 module.exports.verifySignature = verifySignature;
 module.exports.getPublicKey = getPublicKey;
+module.exports.getUser = getUser;
