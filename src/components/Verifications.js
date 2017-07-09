@@ -251,6 +251,14 @@ class Verifications extends React.Component {
       }
     });
 
+    if (this.props.preLabel) {
+      badges.unshift(
+        <div style={{ marginRight: spacing, marginTop: spacing }} key='preLabel'>
+          {this.props.preLabel}
+        </div>
+      );
+    }
+
     if (!this.props.hideProof) {
       badges.push(
         <div style={{ marginTop: spacing }} key='show-proof'>
@@ -306,7 +314,8 @@ Verifications.propTypes = {
   userID: React.PropTypes.string.isRequired,
   showLoader: React.PropTypes.bool,
   noVerificationsElement: React.PropTypes.node,
-  hideProof: React.PropTypes.bool
+  hideProof: React.PropTypes.bool,
+  preLabel: React.PropTypes.node
 };
 
 export default withRouter(Verifications);

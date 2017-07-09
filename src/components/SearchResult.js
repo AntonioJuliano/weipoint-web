@@ -153,12 +153,15 @@ class SearchResult extends React.Component {
                   marginBottom: -7,
                   display: 'flex'
                 }}>
-                <div style={{ color: '#4c4c4c', marginTop: 6, marginRight: 8 }}>
-                  {'Creator: '}
-                </div>
+
                 <Verifications
                   type='ethereum_address'
                   userID={this.props.contract.creator}
+                  preLabel={
+                    <div style={{ color: '#4c4c4c', marginTop: 6 }}>
+                      {'Creator: '}
+                    </div>
+                  }
                 />
               </div>
             }
