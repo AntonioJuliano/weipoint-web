@@ -51,15 +51,19 @@ class Contract extends React.Component {
   }
 
   updateDimensions() {
-    this.setState({ height: window.innerHeight - 355 });
+    if (this.mounted) {
+      this.setState({ height: window.innerHeight - 355 });
+    }
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions.bind(this));
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     window.removeEventListener("resize", this.updateDimensions.bind(this));
   }
 

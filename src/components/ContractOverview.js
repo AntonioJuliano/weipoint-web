@@ -3,6 +3,8 @@ import { Row, Col } from 'react-flexbox-grid';
 import Tags from './Tags';
 import EditableField from './EditableField';
 import Divider from 'material-ui/Divider';
+import Verifications from './Verifications';
+import EthereumBadge from './EthereumBadge';
 
 class ContractOverview extends React.Component {
   constructor(props) {
@@ -85,6 +87,29 @@ class ContractOverview extends React.Component {
           </Col>
         </Row>
         <Divider style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%'}}/>
+          <Row style={{ marginTop: 10, marginBottom: 10 }} center='xs'>
+            <Col xs={10} style={{ textAlign: 'left' }}>
+              <div style={headerStyle}>
+                {'Creator'}
+              </div>
+              {
+                this.props.contract.creator &&
+                <div style={{ marginTop: 10, fontSize: 14 }}>
+                  <div style={{ marginBottom: 10, display: 'inline-block' }}>
+                    <EthereumBadge
+                      address={this.props.contract.creator}
+                      link={true}
+                    />
+                  </div>
+                  <Verifications
+                    type='ethereum_address'
+                    userID={this.props.contract.creator}
+                  />
+                </div>
+              }
+            </Col>
+          </Row>
+          <Divider style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%'}}/>
         <Row style={{ marginTop: 10, marginBottom: 10 }} center='xs'>
           <Col xs={10} style={{ textAlign: 'left' }}>
             <div style={headerStyle}>

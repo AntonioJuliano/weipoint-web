@@ -251,24 +251,26 @@ class Verifications extends React.Component {
       }
     });
 
-    badges.push(
-      <div style={{ marginTop: spacing }} key='show-proof'>
-        <div
-          style={{
-            height: 28,
-            fontSize: 12,
-            color: '#4c4c4c'
-          }}
-        >
+    if (!this.props.hideProof) {
+      badges.push(
+        <div style={{ marginTop: spacing }} key='show-proof'>
           <div
-            style={{ marginTop: 8, marginBottom: 8, cursor: 'pointer' }}
-            onClick={ () => this.setState({ showProof: true }) }
+            style={{
+              height: 28,
+              fontSize: 12,
+              color: '#4c4c4c'
+            }}
           >
-            {'View Proof'}
+            <div
+              style={{ marginTop: 8, marginBottom: 8, cursor: 'pointer' }}
+              onClick={ () => this.setState({ showProof: true }) }
+            >
+              {'View Proof'}
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
 
     return (
       <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: -spacing }}>
@@ -303,7 +305,8 @@ Verifications.propTypes = {
   type: React.PropTypes.string.isRequired,
   userID: React.PropTypes.string.isRequired,
   showLoader: React.PropTypes.bool,
-  noVerificationsElement: React.PropTypes.node
+  noVerificationsElement: React.PropTypes.node,
+  hideProof: React.PropTypes.bool
 };
 
 export default withRouter(Verifications);

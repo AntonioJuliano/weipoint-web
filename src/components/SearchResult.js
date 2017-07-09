@@ -7,6 +7,7 @@ import AttachMoneyIcon from 'react-material-icons/icons/editor/attach-money';
 import Tags from './Tags';
 import { green600, blue700, green900 } from 'material-ui/styles/colors';
 import { withRouter, Link } from 'react-router-dom';
+import Verifications from './Verifications';
 
 class SearchResult extends React.Component {
   constructor(props) {
@@ -75,7 +76,7 @@ class SearchResult extends React.Component {
         <div className='badges' style={{
             display: 'flex',
             flexWrap: 'wrap',
-            marginTop: 18,
+            marginTop: 14,
             marginBottom: -10,
             marginLeft: 5
           }}>
@@ -140,6 +141,27 @@ class SearchResult extends React.Component {
                 showAddTag={false}
               />
             </div>
+            {
+              this.props.contract && this.props.contract.creator &&
+              <div
+                style={{
+                  maxHeight: 115,
+                  height: 'auto',
+                  overflowY: 'auto',
+                  marginTop: 7,
+                  marginLeft: 5,
+                  marginBottom: -7,
+                  display: 'flex'
+                }}>
+                <div style={{ color: '#4c4c4c', marginTop: 6, marginRight: 8 }}>
+                  {'Creator: '}
+                </div>
+                <Verifications
+                  type='ethereum_address'
+                  userID={this.props.contract.creator}
+                />
+              </div>
+            }
             {this.getBadges()}
           </CardText>
         </Card>
