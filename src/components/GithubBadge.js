@@ -1,21 +1,21 @@
 import React from 'react';
 import UsernameBadge from './UsernameBadge';
 
-class KeybaseBadge extends React.Component {
+class GithubBadge extends React.Component {
   render() {
     const badge = <UsernameBadge
       username={this.props.username}
       link={this.props.link}
-      backgroundColor='rgb(51, 160, 255)'
-      textColor='rgb(255, 255, 255)'
-      image='/images/keybaseLogo.png'
+      backgroundColor='#dbdbdb'
+      textColor='#232323'
+      image='/images/github.png'
     />;
     if (!this.props.link) {
       return badge;
     }
     return (
       <a
-        href={'https://www.keybase.io/' + this.props.username}
+        href={'https://github.com/' + this.props.username}
         target='_blank'
         style={{ textDecoration: 'none' }}
       >
@@ -25,9 +25,9 @@ class KeybaseBadge extends React.Component {
   }
 }
 
-KeybaseBadge.propTypes = {
+GithubBadge.propTypes = {
   username: React.PropTypes.string.isRequired,
   link: React.PropTypes.bool
 }
 
-export default KeybaseBadge;
+export default GithubBadge;

@@ -22,7 +22,8 @@ const paths = {
     tokenBalances: origin + '/api/v1/address/tokenBalances'
   },
   verification: {
-    add: origin + '/api/v1/verification'
+    add: origin + '/api/v1/verification',
+    get: origin + '/api/v1/verification'
   }
 }
 

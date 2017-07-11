@@ -5,6 +5,8 @@ import { Row, Col } from 'react-flexbox-grid';
 import Divider from 'material-ui/Divider';
 import TokenBalances from './TokenBalances';
 import VerifyAddress from './VerifyAddress';
+import Verifications from './Verifications';
+import { Link } from 'react-router-dom';
 
 const MIN_CONTENT_HEIGHT = 250;
 
@@ -21,18 +23,24 @@ class EOA extends React.Component {
 
     this.getBodyContent = this.getBodyContent.bind(this);
     this.getDefaultContent = this.getDefaultContent.bind(this);
+
+    this.mounted = false;
   }
 
   updateDimensions() {
-    this.setState({ height: window.innerHeight - 287 });
+    if (this.mounted) {
+      this.setState({ height: window.innerHeight - 287 });
+    }
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions.bind(this));
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     window.removeEventListener("resize", this.updateDimensions.bind(this));
   }
 
@@ -89,10 +97,26 @@ class EOA extends React.Component {
           <Col xs={10} style={{ textAlign: 'left' }}>
             <div>
               <div style={headerStyle}>
-                {'Info'}
+                {'Verified Identities'}
               </div>
               <div style={{ marginTop: 15, marginLeft: 12 }}>
-                {this.getInfoElement(this.props.address)}
+                <Verifications
+                  type='ethereum_address'
+                  userID={this.props.address}
+                  showLoader={true}
+                  noVerificationsElement={
+                    <div style={{ fontSize: 12 }}>
+                      {'This address has no verified identities. If you own this address '}
+                      <Link
+                        to={this.props.location.pathname + '/verify'}
+                        style={{ textDecoration: 'none' }}
+                      >
+                        click here
+                      </Link>
+                      {' to link it to a Keybase account.'}
+                    </div>
+                  }
+                />
               </div>
             </div>
           </Col>
@@ -110,6 +134,19 @@ class EOA extends React.Component {
                   web3={this.props.web3}
                   isUserAccount={isUserAccount}
                 />
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Divider style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%'}}/>
+        <Row style={{ marginTop: 10, marginBottom: 20 }} center='xs'>
+          <Col xs={10} style={{ textAlign: 'left' }}>
+            <div>
+              <div style={headerStyle}>
+                {'Info'}
+              </div>
+              <div style={{ marginTop: 15, marginLeft: 12 }}>
+                {this.getInfoElement(this.props.address)}
               </div>
             </div>
           </Col>

@@ -1,21 +1,22 @@
 import React from 'react';
 import UsernameBadge from './UsernameBadge';
 
-class KeybaseBadge extends React.Component {
+class BitcoinAddressBadge extends React.Component {
   render() {
+    const shortAddress = this.props.username.substr(0, 10) + '...';
     const badge = <UsernameBadge
-      username={this.props.username}
+      username={shortAddress}
       link={this.props.link}
-      backgroundColor='rgb(51, 160, 255)'
+      backgroundColor='#3a3a3a'
       textColor='rgb(255, 255, 255)'
-      image='/images/keybaseLogo.png'
+      image='/images/bitcoinLogo.png'
     />;
     if (!this.props.link) {
       return badge;
     }
     return (
       <a
-        href={'https://www.keybase.io/' + this.props.username}
+        href={'https://blockchain.info/address/' + this.props.username}
         target='_blank'
         style={{ textDecoration: 'none' }}
       >
@@ -25,9 +26,9 @@ class KeybaseBadge extends React.Component {
   }
 }
 
-KeybaseBadge.propTypes = {
+BitcoinAddressBadge.propTypes = {
   username: React.PropTypes.string.isRequired,
   link: React.PropTypes.bool
 }
 
-export default KeybaseBadge;
+export default BitcoinAddressBadge;

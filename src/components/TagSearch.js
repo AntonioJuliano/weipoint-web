@@ -98,7 +98,7 @@ class TagSearch extends React.Component {
     try {
       const response = await fetch(requestPath, { method: 'get' });
       if (response.status !== 200) {
-        this.setState({ searchState: 'error' });
+        this.setState({ searchState: SEARCH_STATES.ERROR });
         return;
       }
       const json = await response.json();
@@ -129,7 +129,7 @@ class TagSearch extends React.Component {
         });
       }
     } catch (e) {
-      console.error(e)
+      console.error(e);
       this.setState({ searchState: SEARCH_STATES.ERROR });
     }
   }
@@ -151,7 +151,7 @@ class TagSearch extends React.Component {
             onPreviousPage={this.gotoPreviousPage}
             total={this.state.totalResults}
             index={this.getIndex(this.props)}
-          />
+          />;
       default:
         // Shouldn't get here
         return null;

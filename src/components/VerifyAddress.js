@@ -9,7 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import Editor from './Editor';
 import TextField from 'material-ui/TextField';
-import { verifySignature, getPublicKey } from '../helpers/Keybase';
+import { verifySignature, getPublicKey, getUser } from '../helpers/Keybase';
 import CircularProgress from 'material-ui/CircularProgress';
 import CancelIcon from 'react-material-icons/icons/navigation/cancel';
 import { red600 } from 'material-ui/styles/colors';
@@ -58,7 +58,8 @@ class VerifyAddress extends React.Component {
       walletSignature: '',
       sendToServerState: 0,
       timestamp: new Date().getTime(),
-      showProof: false
+      showProof: false,
+      keybaseUser: null
     };
 
     this.verifyKeybaseSignature = this.verifyKeybaseSignature.bind(this);
@@ -90,7 +91,9 @@ class VerifyAddress extends React.Component {
           keybaseUsernameError: response.message
         });
       } else if (username) {
+        const user = await getUser(username);
         this.setState({
+          keybaseUser: user,
           keybaseUsernameVerificationState: VERIFICATION_STATES.VERIFIED
         });
         setTimeout(() => this.setState({ stepIndex: 1 }), 2000);
@@ -135,12 +138,26 @@ class VerifyAddress extends React.Component {
   }
 
   async requestWalletSignature() {
+    const walletMissingError = `No Ethereum wallet detected. Please visit this page with your web3
+    enabled wallet such as MetaMask or Mist in which you store this address.`;
+
     if (!this.props.web3.isConnected()) {
       this.setState({
         walletVerificationState: VERIFICATION_STATES.FAILED,
-        walletSignatureError: `No Ethereum wallet detected. Please visit this page with your web3
-        enabled wallet such as MetaMask or Mist in which you store this address.`
+        walletSignatureError: walletMissingError
       });
+      return;
+    }
+
+    const userAccounts = await this.props.web3.eth.getAccountsAsync();
+
+    if (!userAccounts || !userAccounts.includes(this.props.address)) {
+      this.setState({
+        walletVerificationState: VERIFICATION_STATES.FAILED,
+        walletSignatureError: `Your wallet does not contain this address. Please visit this page
+        with your web3 enabled wallet in which you store this address.`
+      });
+      return;
     }
 
     try {
@@ -153,6 +170,8 @@ class VerifyAddress extends React.Component {
         params: [encodedMessage, this.props.address],
         from: this.props.address,
       });
+
+      console.log(result)
 
       if (result.error) {
         this.setState({ walletVerificationState: VERIFICATION_STATES.FAILED });
@@ -312,7 +331,7 @@ class VerifyAddress extends React.Component {
               <li>
                 If you create any contracts using this address Weipoint will
                 automatically display your Keybase account on those contracts,
-                making it easy for users to trust its authenticity
+                making it easy for users to trust their authenticity
               </li>
             </ul>
           </Col>
@@ -333,6 +352,12 @@ class VerifyAddress extends React.Component {
   getConfirmationContent() {
     const shortAddress = this.props.address.substring(0,10) + '...';
     const weipointKeybaseAddress = 'www.weipoint.com/service/keybase/' + this.state.keybaseUsername;
+
+    const extraLinks = this.state.keybaseUser.proofs_summary.all.map( u => {
+      return '/service/' + u.proof_type + '/' + u.nametag;
+    });
+
+    const links = extraLinks.concat([weipointKeybaseAddress]);
 
     switch (this.state.sendToServerState) {
       case 0:
@@ -391,14 +416,16 @@ class VerifyAddress extends React.Component {
             >
               <Col xs={10} lg={9}>
                 <ul>
-                  <li>
-                    <Link
-                      to={'/service/keybase/' + this.state.keybaseUsername}
-                      style={{ textDecoration: 'none' }}
-                    >
-                      {weipointKeybaseAddress}
-                    </Link>
-                  </li>
+                  {
+                    links.map( l => <li key={l} style={{ marginTop: 5 }}>
+                      <Link
+                        to={l}
+                        style={{ textDecoration: 'none' }}
+                      >
+                        {'www.weipoint.com' + l}
+                      </Link>
+                    </li>)
+                  }
                 </ul>
               </Col>
             </Row>
@@ -866,7 +893,7 @@ class VerifyAddress extends React.Component {
             </Row>
             <Row center='xs'>
               <p>
-                {'Signing failed. Please try again'}
+                {this.state.walletSignatureError || 'Signing failed. Please try again'}
               </p>
             </Row>
           </div>

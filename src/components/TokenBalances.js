@@ -25,16 +25,23 @@ class TokenBalances extends React.Component {
     };
 
     this.getTokenBalances = this.getTokenBalances.bind(this);
+  }
 
-    const cachedBalances = balanceCache.get(props.address);
+  componentDidMount() {
+    this.mounted = true;
+    const cachedBalances = balanceCache.get(this.props.address);
     if (cachedBalances) {
       this.state = {
         balances: cachedBalances,
         requestState: REQUEST_STATES.COMPLETED
       };
     } else {
-      this.getTokenBalances(props.address);
+      this.getTokenBalances(this.props.address);
     }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -64,7 +71,10 @@ class TokenBalances extends React.Component {
       const json = await response.json();
 
       balanceCache.set(address, json.balances);
-      this.setState({ balances: json.balances, requestState: REQUEST_STATES.COMPLETED });
+
+      if (this.mounted) {
+        this.setState({ balances: json.balances, requestState: REQUEST_STATES.COMPLETED });
+      }
     } catch(e) {
       console.error(e);
     }
