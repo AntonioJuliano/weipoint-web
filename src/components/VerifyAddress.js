@@ -331,7 +331,7 @@ class VerifyAddress extends React.Component {
               <li>
                 If you create any contracts using this address Weipoint will
                 automatically display your Keybase account on those contracts,
-                making it easy for users to trust its authenticity
+                making it easy for users to trust their authenticity
               </li>
             </ul>
           </Col>
