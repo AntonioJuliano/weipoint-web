@@ -1,0 +1,75 @@
+==================================================================
+https://keybase.io/antonioj
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://www.weipoint.com
+  * I am antonioj (https://keybase.io/antonioj) on keybase.
+  * I have a public key with fingerprint 8A5A 0114 9B9B 2E4E A85D  72D2 017A 4E54 F1FB 45E6
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "eldest_kid": "01206aa4de998eb579f8580d57e13d84c8d01055be19c83de313eb950f0187cee46c0a",
+            "fingerprint": "8a5a01149b9b2e4ea85d72d2017a4e54f1fb45e6",
+            "host": "keybase.io",
+            "key_id": "017a4e54f1fb45e6",
+            "kid": "010150adfbca2815f7c56f67827184771ba5304c0cf1908905015217a0b05c6fdaf90a",
+            "uid": "e088c2b0830312d9d50e2026f2a67419",
+            "username": "antonioj"
+        },
+        "service": {
+            "hostname": "www.weipoint.com",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1499817366,
+    "expire_in": 157680000,
+    "prev": "a964704b80b14f1ebd18c87349f6a5daf2ba592993da41b3dcf237eb642ed7e4",
+    "seqno": 12,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.72
+Comment: https://keybase.io/crypto
+
+yMN0AnicZZJ7UFRVHMfZtAyKYGJMXJqYbi9gAc+57wuOZAY6DlISwxqR632cu1we
+e5fdu2ywAzNIgEozKT0mGApaIAslGktSBmoQTBlzJPBBJSuEIYQh0DhYSXWXwb+6
+/5y553y+3/P9fef0B68KCDIYStIy5v9OnjSc621wBbyK0PseTFClYizBg+Wh5QXl
+S8ipWfIUCUvAAMQBzfOkhDiORQLFcDJLsUCiGAQJiSVFVgIQUJSAICeyhIQISCCB
+o4AMIMuICJG0CHgsFpMVmxU57A7Fpum2LE/xAEKSEzgBRyTiWUpicAkHkOFJRJEy
+lAWSQrQuzFGdfoUeTuCdKF5R9T39x7IS73/8vdwAUoCXZEHkcRZSMiNStEwzLM5A
+lmQYKPAUAUgRiDLkAMsBSudx3Q0IgBJpWeJlbjm3a9kOAZYVcQGwBCAgLnESBRAO
+cFrGeZohIecHnchh4wuQTvM2TbUpai5WGovpu0WKiPzF+idZIdxud7wbKXZVryNe
+VAt0vd2haqqo5uunOZpmdyb41VqxfRlHgmXFyCIoNknvUlcUIYdTUW1YAtRJUVP8
+znqlHAsZgqZjMfSGXXEgi+InKIZmgf7570FF/owcTTKAFFggQL0+JEiQFVmGIDmZ
+5il9fFxviMM5jpB4EgqEJMo4wSCBJnEkMYjE/KMV2lTdG9dz8lbd06lYbbzmciCs
+9FRv9uoAQ1DAA/ff539kAUGBofee3hcfhdwNXF++7mbOlsXNpLfxWltHf71p8TXh
+UNyHe1+IOdvcffyMaoh6KQalp0fsta3F05Omq4/829dV9NsZ32JTapz5MftXn7a8
+eCrh4MDaxo5Dr/w6HNQw2vIjGI0s6JydnKmom/2Jyr1kGtSSrjHN+Z+Ln0Uvnp+f
+7anJujp9eFv/n5XRmz4opQzq1EBaxupnegfbj70zuKf/9NKxfUyrFWWvu3zU2zSa
+Fkpmb9u+5siQp9gUdm4EixT3waUub/t3k+Mzn1x2jZ0vZJPpzL71bxkuPj42HzY4
+ljVZXv9U564p21DLL76sodb8vhvao2en5mJ+Dr210FFYfefkWLPHeOnLpNPhJ4wp
+tUPYpoxdpp3k75VzPk9ryR9N+yN2R2b2vb71wtLz3Rsqi79PxIzMwns+8wRF8VfC
+GgtDrK4aQ6LBqvSc3CK2xZk3dr27aqD+ynDmQG7KxYrr31YlHk1WfqgZ2RzeWW5M
+3R8x3PhwLfPP1vHO5jqzsXeHGpj5BPCVhe9svukqG+p6ZEeZeTowcKQ/NTgx4oJJ
+sT/ktgQH3TZnJXm/uWU63nMAWR2cZ3fdiRsHiesmQ/viQlzUXMPtlze6jFW1VdXm
+GZiy8PGbz9V5Bws3tMY9GdEYPL5n+0TK2xPeqmej1Py70aOGByu67b6rd7x/udtD
+MvOMa1TfYfzp4Laqr2dL1E3/AeISyFA=
+=zteI
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/antonioj
+
+==================================================================
