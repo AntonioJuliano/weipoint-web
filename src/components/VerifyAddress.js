@@ -25,6 +25,7 @@ import { Link } from 'react-router-dom';
 import paths from '../lib/ApiPaths';
 import Dialog from 'material-ui/Dialog';
 import JSONPretty from 'react-json-pretty';
+import { trackEvent } from '../lib/Analytics';
 
 const FORM_STATES = {
   OVERVIEW: 1,
@@ -181,6 +182,11 @@ class VerifyAddress extends React.Component {
           sendToServerState: 1
         });
         this.sendVerificationToServer();
+        trackEvent({
+          category: 'Verification',
+          action: 'Completed',
+          label: this.props.address,
+        });
         setTimeout(() => this.setState({ formState: FORM_STATES.CONFIRMATION }), 2000);
       }
     } catch(e) {
@@ -339,7 +345,14 @@ class VerifyAddress extends React.Component {
             <RaisedButton
               label='Start'
               primary={true}
-              onTouchTap={ () => this.setState({ formState: FORM_STATES.FORM })}
+              onTouchTap={ () => {
+                trackEvent({
+                  category: 'Verification',
+                  action: 'Start',
+                  label: this.props.address,
+                });
+                this.setState({ formState: FORM_STATES.FORM })
+              }}
             />
           </Col>
         </Row>
