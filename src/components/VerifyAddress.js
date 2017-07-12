@@ -171,8 +171,6 @@ class VerifyAddress extends React.Component {
         from: this.props.address,
       });
 
-      console.log(result)
-
       if (result.error) {
         this.setState({ walletVerificationState: VERIFICATION_STATES.FAILED });
       } else {
@@ -351,9 +349,16 @@ class VerifyAddress extends React.Component {
 
   getConfirmationContent() {
     const shortAddress = this.props.address.substring(0,10) + '...';
-    const weipointKeybaseAddress = 'www.weipoint.com/service/keybase/' + this.state.keybaseUsername;
+    const weipointKeybaseAddress = '/service/keybase/' + this.state.keybaseUsername;
 
-    const extraLinks = this.state.keybaseUser.proofs_summary.all.map( u => {
+    const extraLinks = this.state.keybaseUser.proofs_summary.all.filter(
+      u => u.proof_type !== 'generic_web_site' && u.proof_type !== 'dns'
+    ).map( u => {
+      let type = u.proof_type;
+      // Should be domain, but also doesn't work right now :(
+      if (type === 'generic_web_site' || type === 'dns') {
+        type = 'domain';
+      }
       return '/service/' + u.proof_type + '/' + u.nametag;
     });
 
@@ -437,7 +442,7 @@ class VerifyAddress extends React.Component {
             >
               <Col xs={10} lg={9}>
                 <p>
-                  As well as by searching for {this.state.keybaseUsername} through the main search
+                  As well as by searching for your linked usernames through the main search
                   bar. If you create/have created any contracts with your address they will
                   also be discoverable by your username.
                 </p>

@@ -173,8 +173,8 @@ class EOA extends React.Component {
             />
           </div>
           <div style={{
-            height: this.state.height,
-            minHeight: MIN_CONTENT_HEIGHT,
+            // height: this.state.height,
+            minHeight: Math.max(MIN_CONTENT_HEIGHT, this.state.height),
             overflowY: 'auto',
             overflowX: 'hidden'
           }}>
