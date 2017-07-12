@@ -11,6 +11,8 @@ import terms from '../assets/docs/terms';
 import privacy from '../assets/docs/privacy';
 import About from './About';
 import Wallet from './Wallet';
+import Promo from './Promo';
+import PromoViewer from './PromoViewer';
 import Services from './Services';
 import { isEnsDomain } from '../lib/services/ensService';
 
@@ -112,6 +114,15 @@ class Search extends React.Component {
             path="/about"
             render={() => <About />}
           />
+          <Route
+            path='/'
+            render={() => <Row center='xs' style={{ marginTop: 100 }}>
+              <PromoViewer
+                promos={this.getPromos()}
+                switchDelay={5000}
+              />
+            </Row>}
+          />
           <Route path="/:path" render={() => <PageNotFound />}/>
         </Switch>
       </div>
@@ -143,6 +154,19 @@ class Search extends React.Component {
     }).catch( e => console.error(e) );
 
     return 'loading';
+  }
+
+  getPromos() {
+    let promos = [];
+    promos.push(
+      <Promo
+        image='/images/AddressLink.png'
+        link='/wallet/verify'
+        message='Verify your address'
+      />
+    );
+
+    return promos;
   }
 
   render() {
