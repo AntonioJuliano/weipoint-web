@@ -73,3 +73,71 @@ appending to this document.
 View my publicly-auditable identity here: https://keybase.io/antonioj
 
 ==================================================================
+==================================================================
+https://keybase.io/weipoint
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://www.weipoint.com
+  * I am weipoint (https://keybase.io/weipoint) on keybase.
+  * I have a public key with fingerprint AEBC C215 A3BF 3E56 2A64  0C02 2BD8 B04A 4F76 8C16
+
+To do so, I am signing this object:
+
+{
+    &quot;body&quot;: {
+        &quot;key&quot;: {
+            &quot;eldest_kid&quot;: &quot;01014e706895307b72431062f792f697162c8cfc14bba9bce5d3ad376cd4c5ac2aa40a&quot;,
+            &quot;fingerprint&quot;: &quot;aebcc215a3bf3e562a640c022bd8b04a4f768c16&quot;,
+            &quot;host&quot;: &quot;keybase.io&quot;,
+            &quot;key_id&quot;: &quot;2bd8b04a4f768c16&quot;,
+            &quot;kid&quot;: &quot;01014e706895307b72431062f792f697162c8cfc14bba9bce5d3ad376cd4c5ac2aa40a&quot;,
+            &quot;uid&quot;: &quot;3f625ec4ef7af7a0d7a2d54bb3e05819&quot;,
+            &quot;username&quot;: &quot;weipoint&quot;
+        },
+        &quot;service&quot;: {
+            &quot;hostname&quot;: &quot;www.weipoint.com&quot;,
+            &quot;protocol&quot;: &quot;https:&quot;
+        },
+        &quot;type&quot;: &quot;web_service_binding&quot;,
+        &quot;version&quot;: 1
+    },
+    &quot;ctime&quot;: 1500068773,
+    &quot;expire_in&quot;: 157680000,
+    &quot;prev&quot;: &quot;e8d6f55d5f308dac493879156c98f7f4c6d4f24398f80dfcb89dfc5f7a0b2320&quot;,
+    &quot;seqno&quot;: 3,
+    &quot;tag&quot;: &quot;signature&quot;
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.73
+Comment: https://keybase.io/crypto
+
+yMIlAnicrVJrSBRRFN7NLLUETTQkek0RZqvdec9sZIFSGJWWpQjCeufOnXXU3Vl3
+Z32y9aMy7AERmEmJWfgvKrUfkhWZQpCV0gsJQkh6obYlGVKi3bH818/gci/nnO/7
+zvkOtz82whZjH9l0KKNkVVOffaD3UtBWqG9rr6MUQ62hnHVUGZ5/cLmKA6arTFcp
+JwVoQHNYBIIk8ywQFZHhWBoIjCbKjCbIIi0wSEIaojlFgbKCMK+yUGVFAakc4iFi
+IOQApByUpnvd2O/z616TyEKsIMTQPGQVjcW8wECBAwgwjKJKCuAgp4mChGiBEEuM
+gMUgwykwgNN1g+RI4Jof7x/4/zx3cF6O1QSGx4jDmgjJAaoIGZUnXBYDXqJlCxjA
+fi/0YIKuwrrPsIyGHBTJVuoIW4u1nCwgqqrSF1DpyPAQvs9vmAYyykm1xDR9AafF
+Nmt8fwQV118hl6J7VbJLwqjE/oBueCknTZDI1C1lmgeAmBZF1kHhap/uxy7dQvBk
+P6QCrD64kkhiSRU0nld5jQWSChEns5Io07yAZEkTNQ4JKqeRpZFIAqqGFEkmN2+Z
+VxiWAZRlrcJrUE7SyYRuIhnQ3V5oBv2YCj18ULTYZo+xLYlcZP0xW0x03MLPu9sV
+ZbswFjyb/O5OvZjFNBy+ltPhrj+XhHevHl/pCw9U91ZoQ822ZeFpzytHRl7GVKi/
+Fs90l3U2D5+ITRqfLd15Iz/3eSG9oy2eysnuPBLlOcl08Nv33qylPgZTl7z49njs
+oid26v70Gs/k9R+h6gRX7c9+58yBkeWtceGE1yly6vDV0pQV39fbuo9XRG1Y6nr/
+aTQy71eL41lVYX6mGfy8f+ZN2Lu5YPDKwa/jcbtabkcWTUzAt1ltaT2DWzYey53M
+9p/Xss+sK+iJD94a+nLafiq66Wmx28jc2hoRqovMnk18OReX/GGPA7cXPwoPhUfX
+Nlw+ui/xSWNXcn1ao/NedN+c8zdOSkEw
+=pO1d
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/weipoint
+
+==================================================================
